@@ -16,8 +16,6 @@ const Based = () => {
     'AvatarSample_B.vrm',
     'AvatarSample_C.vrm',
     'nikechan_v1.vrm',
-    'nikechan_v2.vrm',
-    'nikechan_v2_outerwear.vrm',
   ])
   const selectLanguage = settingsStore((s) => s.selectLanguage)
 
