@@ -1,54 +1,64 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import axios from 'axios'
-
-type Data = {
-  audio?: ArrayBuffer
-  error?: string
-}
+import { NextRequest } from 'next/server'
 
 export const config = {
   runtime: 'edge',
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  const { script, speed, voiceActorId, apiKey } = req.body
+export default async function handler(req: NextRequest) {
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+    })
+  }
+
+  const body = await req.json()
+  const { script, speed, voiceActorId, apiKey } = body
 
   const nijivoiceApiKey = apiKey || process.env.NIJIVOICE_API_KEY
   if (!nijivoiceApiKey) {
-    return res.status(400).json({ error: 'API key is required' })
+    return new Response(JSON.stringify({ error: 'API key is required' }), {
+      status: 400,
+    })
   }
 
   try {
-    const response = await axios.post(
+    const response = await fetch(
       `https://api.nijivoice.com/api/platform/v1/voice-actors/${voiceActorId}/generate-voice`,
       {
-        script,
-        speed: speed.toString(),
-        format: 'wav',
-      },
-      {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': nijivoiceApiKey,
         },
-        timeout: 30000,
+        body: JSON.stringify({
+          script,
+          speed: speed.toString(),
+          format: 'wav',
+        }),
       }
     )
 
-    const audioUrl = response.data.generatedVoice.audioFileUrl
+    if (!response.ok) {
+      throw new Error(`Nijivoice API error: ${response.status}`)
+    }
 
-    const audioResponse = await axios.get(audioUrl, {
-      responseType: 'stream',
-      timeout: 30000,
+    const data = await response.json()
+    const audioUrl = data.generatedVoice.audioFileUrl
+
+    const audioResponse = await fetch(audioUrl)
+    if (!audioResponse.ok) {
+      throw new Error('Failed to fetch audio file')
+    }
+
+    return new Response(audioResponse.body, {
+      headers: {
+        'Content-Type': 'audio/mpeg',
+      },
     })
-
-    res.setHeader('Content-Type', 'audio/mpeg')
-    audioResponse.data.pipe(res)
   } catch (error) {
     console.error('Error in Nijivoice TTS:', error)
-    res.status(500).json({ error: 'Internal Server Error' })
+    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+      status: 500,
+    })
   }
 }

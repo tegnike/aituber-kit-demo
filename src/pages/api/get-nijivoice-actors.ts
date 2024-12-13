@@ -1,18 +1,18 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextRequest } from 'next/server'
 
 export const config = {
   runtime: 'edge',
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { apiKey } = req.query
+export default async function handler(req: NextRequest) {
+  const { searchParams } = new URL(req.url)
+  const apiKey = searchParams.get('apiKey')
 
   const nijivoiceApiKey = apiKey || process.env.NIJIVOICE_API_KEY
   if (!nijivoiceApiKey) {
-    return res.status(400).json({ error: 'API key is required' })
+    return new Response(JSON.stringify({ error: 'API key is required' }), {
+      status: 400,
+    })
   }
 
   try {
@@ -25,9 +25,12 @@ export default async function handler(
       }
     )
     const data = await response.json()
-    return res.status(200).json(data)
+    return new Response(JSON.stringify(data), { status: 200 })
   } catch (error) {
     console.error('Failed to fetch voice actors:', error)
-    return res.status(500).json({ error: 'Failed to fetch voice actors' })
+    return new Response(
+      JSON.stringify({ error: 'Failed to fetch voice actors' }),
+      { status: 500 }
+    )
   }
 }
