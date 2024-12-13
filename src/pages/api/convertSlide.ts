@@ -26,7 +26,7 @@
 //   page: z.number().optional(),
 // })
 
-// const systemPrompt = `You are a presentation expert. Given an image of a slide, 
+// const systemPrompt = `You are a presentation expert. Given an image of a slide,
 //     please create a script that is easy to understand for first-time listeners. Please follow these constraints:
 //     - No need for opening and closing greetings
 //     - Create the script in {{language}}
