@@ -910,7 +910,6 @@ const Voice = () => {
                       })
                     }}
                     className="px-16 py-8 bg-surface1 hover:bg-surface1-hover rounded-8"
-                    disabled
                   >
                     <option value="">{t('Select')}</option>
                     {nijivoiceSpeakers.map((actor) => (
@@ -935,7 +934,6 @@ const Voice = () => {
                       nijivoiceSpeed: Number(e.target.value),
                     })
                   }}
-                  disabled
                 />
               </>
             )
