@@ -11,17 +11,24 @@ import { TextButton } from '../textButton'
 const Based = () => {
   const { t } = useTranslation()
   const { characterName, selectedVrmPath } = settingsStore()
-  const [vrmFiles, setVrmFiles] = useState<string[]>([])
+  const [vrmFiles, setVrmFiles] = useState<string[]>([
+    'AvatarSample_A.vrm',
+    'AvatarSample_B.vrm',
+    'AvatarSample_C.vrm',
+    'nikechan_v1.vrm',
+    'nikechan_v2.vrm',
+    'nikechan_v2_outerwear.vrm',
+  ])
   const selectLanguage = settingsStore((s) => s.selectLanguage)
 
-  useEffect(() => {
-    fetch('/api/get-vrm-list')
-      .then((res) => res.json())
-      .then((files) => setVrmFiles(files))
-      .catch((error) => {
-        console.error('Error fetching VRM list:', error)
-      })
-  }, [])
+  // useEffect(() => {
+  //   fetch('/api/get-vrm-list')
+  //     .then((res) => res.json())
+  //     .then((files) => setVrmFiles(files))
+  //     .catch((error) => {
+  //       console.error('Error fetching VRM list:', error)
+  //     })
+  // }, [])
 
   const handleVrmUpload = async (file: File) => {
     const formData = new FormData()
@@ -161,6 +168,7 @@ const Based = () => {
                 fileInput.click()
               }
             }}
+            disabled
           >
             {t('OpenVRM')}
           </TextButton>
