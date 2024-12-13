@@ -131,6 +131,7 @@ const ModelProvider = () => {
           onChange={(e) =>
             handleAIServiceChange(e.target.value as keyof typeof defaultModels)
           }
+          disabled
         >
           <option value="openai">OpenAI</option>
           <option value="anthropic">Anthropic</option>
@@ -170,6 +171,7 @@ const ModelProvider = () => {
                   onChange={(e) =>
                     settingsStore.setState({ openaiKey: e.target.value })
                   }
+                  disabled
                 />
               </div>
               <div className="my-24">
@@ -181,6 +183,7 @@ const ModelProvider = () => {
                     onClick={() => {
                       handleRealtimeAPIModeChange(!realtimeAPIMode)
                     }}
+                    disabled
                   >
                     {realtimeAPIMode ? t('StatusOn') : t('StatusOff')}
                   </TextButton>
@@ -200,6 +203,7 @@ const ModelProvider = () => {
                             model as RealtimeAPIModeContentType,
                         })
                       }}
+                      disabled
                     >
                       <option value="input_text">{t('InputText')}</option>
                       <option value="input_audio">{t('InputAudio')}</option>
@@ -216,6 +220,7 @@ const ModelProvider = () => {
                           realtimeAPIModeVoice: model as RealtimeAPIModeVoice,
                         })
                       }}
+                      disabled
                     >
                       <option value="alloy">alloy</option>
                       <option value="ash">ash</option>
@@ -246,6 +251,7 @@ const ModelProvider = () => {
                     onClick={() => {
                       handleAudioModeChange(!audioMode)
                     }}
+                    disabled
                   >
                     {audioMode ? t('StatusOn') : t('StatusOff')}
                   </TextButton>
@@ -264,6 +270,7 @@ const ModelProvider = () => {
                           audioModeInputType: model as AudioModeInputType,
                         })
                       }}
+                      disabled
                     >
                       <option value="input_text">{t('InputText')}</option>
                       <option value="input_audio">{t('InputAudio')}</option>
@@ -280,6 +287,7 @@ const ModelProvider = () => {
                           audioModeVoice: model as OpenAITTSVoice,
                         })
                       }}
+                      disabled
                     >
                       <option value="alloy">alloy</option>
                       <option value="echo">echo</option>
@@ -311,6 +319,7 @@ const ModelProvider = () => {
                         menuStore.setState({ showWebcam: false })
                       }
                     }}
+                    disabled
                   >
                     <option value="chatgpt-4o-latest">chatgpt-4o-latest</option>
                     <option value="gpt-4o-mini">gpt-4o-mini</option>
@@ -342,6 +351,7 @@ const ModelProvider = () => {
                   onChange={(e) =>
                     settingsStore.setState({ anthropicKey: e.target.value })
                   }
+                  disabled
                 />
               </div>
               <div className="my-24">
@@ -356,6 +366,7 @@ const ModelProvider = () => {
                       selectAIModel: e.target.value,
                     })
                   }
+                  disabled
                 >
                   <option value="claude-3-opus-20240229">
                     claude-3-opus-20240229
@@ -393,6 +404,7 @@ const ModelProvider = () => {
                   onChange={(e) =>
                     settingsStore.setState({ googleKey: e.target.value })
                   }
+                  disabled
                 />
               </div>
               <div className="my-24">
@@ -407,6 +419,7 @@ const ModelProvider = () => {
                       selectAIModel: e.target.value,
                     })
                   }
+                  disabled
                 >
                   <option value="gemini-1.5-flash-latest">
                     gemini-1.5-flash-latest
@@ -453,6 +466,7 @@ const ModelProvider = () => {
                   onChange={(e) =>
                     settingsStore.setState({ azureKey: e.target.value })
                   }
+                  disabled
                 />
               </div>
               <div className="my-24">
@@ -474,6 +488,7 @@ const ModelProvider = () => {
                   onChange={(e) =>
                     settingsStore.setState({ azureEndpoint: e.target.value })
                   }
+                  disabled
                 />
               </div>
               <div className="my-24">
@@ -485,6 +500,7 @@ const ModelProvider = () => {
                     onClick={() => {
                       handleRealtimeAPIModeChange(!realtimeAPIMode)
                     }}
+                    disabled
                   >
                     {realtimeAPIMode ? t('StatusOn') : t('StatusOff')}
                   </TextButton>
@@ -504,6 +520,7 @@ const ModelProvider = () => {
                             model as RealtimeAPIModeContentType,
                         })
                       }}
+                      disabled
                     >
                       <option value="input_text">{t('InputText')}</option>
                       <option value="input_audio">{t('InputAudio')}</option>
@@ -521,6 +538,7 @@ const ModelProvider = () => {
                             model as RealtimeAPIModeAzureVoice,
                         })
                       }}
+                      disabled
                     >
                       <option value="alloy">alloy</option>
                       <option value="amuch">amuch</option>
@@ -570,6 +588,7 @@ const ModelProvider = () => {
                   onChange={(e) =>
                     settingsStore.setState({ groqKey: e.target.value })
                   }
+                  disabled
                 />
               </div>
               <div className="my-24">
@@ -584,6 +603,7 @@ const ModelProvider = () => {
                       selectAIModel: e.target.value,
                     })
                   }
+                  disabled
                 >
                   <option value="gemma-7b-it">gemma-7b-it</option>
                   <option value="llama3-70b-8192">llama3-70b-8192</option>
@@ -616,6 +636,7 @@ const ModelProvider = () => {
                   onChange={(e) =>
                     settingsStore.setState({ cohereKey: e.target.value })
                   }
+                  disabled
                 />
               </div>
               <div className="my-24">
@@ -630,6 +651,7 @@ const ModelProvider = () => {
                       selectAIModel: e.target.value,
                     })
                   }
+                  disabled
                 >
                   <option value="command-light">command-light</option>
                   <option value="command-light-nightly">
@@ -669,6 +691,7 @@ const ModelProvider = () => {
                   onChange={(e) =>
                     settingsStore.setState({ mistralaiKey: e.target.value })
                   }
+                  disabled
                 />
               </div>
               <div className="my-24">
@@ -683,6 +706,7 @@ const ModelProvider = () => {
                       selectAIModel: e.target.value,
                     })
                   }
+                  disabled
                 >
                   <option value="mistral-large-latest">
                     mistral-large-latest
@@ -717,6 +741,7 @@ const ModelProvider = () => {
                   onChange={(e) =>
                     settingsStore.setState({ perplexityKey: e.target.value })
                   }
+                  disabled
                 />
               </div>
               <div className="my-24">
@@ -731,6 +756,7 @@ const ModelProvider = () => {
                       selectAIModel: e.target.value,
                     })
                   }
+                  disabled
                 >
                   <option value="llama-3.1-sonar-small-128k-online">
                     llama-3.1-sonar-small-128k-online
@@ -774,6 +800,7 @@ const ModelProvider = () => {
                   onChange={(e) =>
                     settingsStore.setState({ fireworksKey: e.target.value })
                   }
+                  disabled
                 />
               </div>
               <div className="my-24">
@@ -788,6 +815,7 @@ const ModelProvider = () => {
                       selectAIModel: e.target.value,
                     })
                   }
+                  disabled
                 >
                   <option value="accounts/fireworks/models/llama-v3p1-405b-instruct">
                     llama-v3p1-405b-instruct
@@ -845,6 +873,7 @@ const ModelProvider = () => {
                   onChange={(e) =>
                     settingsStore.setState({ localLlmUrl: e.target.value })
                   }
+                  disabled
                 />
               </div>
               <div className="my-24">
@@ -861,6 +890,7 @@ const ModelProvider = () => {
                       selectAIModel: e.target.value,
                     })
                   }
+                  disabled
                 />
               </div>
             </>
@@ -881,6 +911,7 @@ const ModelProvider = () => {
                   onChange={(e) =>
                     settingsStore.setState({ difyKey: e.target.value })
                   }
+                  disabled
                 />
               </div>
               <div className="my-24">
@@ -896,6 +927,7 @@ const ModelProvider = () => {
                   onChange={(e) =>
                     settingsStore.setState({ difyUrl: e.target.value })
                   }
+                  disabled
                 />
               </div>
             </>
@@ -925,6 +957,7 @@ const ModelProvider = () => {
             settingsStore.setState({ systemPrompt: e.target.value })
           }
           className="px-16 py-8 bg-surface1 hover:bg-surface1-hover h-168 rounded-8 w-full"
+          disabled
         ></textarea>
       </div>
     </div>

@@ -36,7 +36,7 @@ const MessageReceiverSetting = () => {
       </div>
       <p className="">{t('MessageReceiverDescription')}</p>
       <div className="my-8">
-        <TextButton onClick={toggleMessageReceiver}>
+        <TextButton onClick={toggleMessageReceiver} disabled>
           {messageReceiverEnabled ? t('StatusOn') : t('StatusOff')}
         </TextButton>
       </div>

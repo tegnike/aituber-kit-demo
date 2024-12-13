@@ -68,14 +68,7 @@ const Slide = () => {
       <div className="mb-16 typography-20 font-bold">{t('SlideMode')}</div>
       <p className="">{t('SlideModeDescription')}</p>
       <div className="my-8">
-        <TextButton
-          onClick={toggleSlideMode}
-          disabled={
-            !multiModalAIServices.includes(
-              selectAIService as multiModalAIServiceKey
-            )
-          }
-        >
+        <TextButton onClick={toggleSlideMode} disabled>
           {slideMode ? t('StatusOn') : t('StatusOff')}
         </TextButton>
       </div>
@@ -90,6 +83,7 @@ const Slide = () => {
             value={selectedSlideDocs}
             onChange={handleFolderChange}
             key={updateKey}
+            disabled
           >
             {slideFolders.map((folder) => (
               <option key={folder} value={folder}>

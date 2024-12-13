@@ -30,6 +30,7 @@ const ExternalLinkage = () => {
           onClick={() => {
             handleExternalLinkageModeChange(!externalLinkageMode)
           }}
+          disabled
         >
           {externalLinkageMode ? t('StatusOn') : t('StatusOff')}
         </TextButton>

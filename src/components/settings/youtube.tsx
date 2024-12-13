@@ -39,11 +39,11 @@ const YouTube = () => {
       <div className="mb-16 typography-20 font-bold">{t('YoutubeMode')}</div>
       <div className="my-8">
         {youtubeMode ? (
-          <TextButton onClick={() => handleChangeYoutubeMode(false)}>
+          <TextButton onClick={() => handleChangeYoutubeMode(false)} disabled>
             {t('StatusOn')}
           </TextButton>
         ) : (
-          <TextButton onClick={() => handleChangeYoutubeMode(true)}>
+          <TextButton onClick={() => handleChangeYoutubeMode(true)} disabled>
             {t('StatusOff')}
           </TextButton>
         )}
@@ -67,6 +67,7 @@ const YouTube = () => {
                       youtubeApiKey: e.target.value,
                     })
                   }
+                  disabled
                 />
                 <div className="my-16 typography-20 font-bold">
                   {t('YoutubeLiveID')}
@@ -81,6 +82,7 @@ const YouTube = () => {
                       youtubeLiveId: e.target.value,
                     })
                   }
+                  disabled
                 />
                 <div className="mt-24">
                   <div className="my-16 typography-20 font-bold">
@@ -101,11 +103,7 @@ const YouTube = () => {
                         conversationContinuityMode: !conversationContinuityMode,
                       })
                     }
-                    disabled={
-                      !multiModalAIServices.includes(selectAIService as any) ||
-                      slideMode ||
-                      externalLinkageMode
-                    }
+                    disabled
                   >
                     {t(conversationContinuityMode ? 'StatusOn' : 'StatusOff')}
                   </TextButton>

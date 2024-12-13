@@ -109,6 +109,7 @@ const SlideConvert: React.FC<SlideConvertProps> = ({ onFolderUpdate }) => {
               document.getElementById('fileInput')?.click()
             }}
             type="button"
+            disabled
           >
             {t('PdfConvertFileUpload')}
           </TextButton>
@@ -125,12 +126,14 @@ const SlideConvert: React.FC<SlideConvertProps> = ({ onFolderUpdate }) => {
           value={folderName}
           onChange={(e) => setFolderName(e.target.value)}
           required
+          disabled
           className="text-ellipsis px-16 py-8 w-col-span-4 bg-surface1 hover:bg-surface1-hover rounded-8"
         />
         <div className="my-16 font-bold">{t('PdfConvertModelSelect')}</div>
         <select
           value={model}
           onChange={(e) => setModel(e.target.value)}
+          disabled
           className="text-ellipsis px-16 py-8 w-col-span-4 bg-surface1 hover:bg-surface1-hover rounded-8"
         >
           {aiService === 'openai' && (
@@ -177,7 +180,7 @@ const SlideConvert: React.FC<SlideConvertProps> = ({ onFolderUpdate }) => {
           )}
         </select>
         <div className="mt-16">
-          <TextButton type="submit" disabled={isLoading}>
+          <TextButton type="submit" disabled>
             {isLoading ? t('PdfConvertLoading') : t('PdfConvertButton')}
           </TextButton>
         </div>
