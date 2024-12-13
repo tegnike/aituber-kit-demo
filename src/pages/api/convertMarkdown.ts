@@ -1,3 +1,7 @@
+export const config = {
+  runtime: 'edge',
+}
+
 // import { NextApiRequest, NextApiResponse } from 'next'
 // import { Marpit } from '@marp-team/marpit'
 // import fs from 'fs/promises'

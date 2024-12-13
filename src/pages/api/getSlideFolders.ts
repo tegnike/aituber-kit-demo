@@ -1,3 +1,7 @@
+export const config = {
+  runtime: 'edge',
+}
+
 // import fs from 'fs'
 // import path from 'path'
 // import { NextApiRequest, NextApiResponse } from 'next'

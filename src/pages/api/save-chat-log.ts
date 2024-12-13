@@ -1,3 +1,7 @@
+export const config = {
+  runtime: 'edge',
+}
+
 // import { createClient, SupabaseClient } from '@supabase/supabase-js'
 // import { NextApiRequest, NextApiResponse } from 'next'
 // import fs from 'fs'

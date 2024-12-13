@@ -1,3 +1,7 @@
+export const config = {
+  runtime: 'edge',
+}
+
 // import type { NextApiRequest, NextApiResponse } from 'next'
 // import textToSpeech from '@google-cloud/text-to-speech'
 // import { google } from '@google-cloud/text-to-speech/build/protos/protos'

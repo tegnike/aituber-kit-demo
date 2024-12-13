@@ -1,3 +1,7 @@
+export const config = {
+  runtime: 'edge',
+}
+
 // import { NextApiRequest, NextApiResponse } from 'next'
 // import OpenAI from 'openai'
 

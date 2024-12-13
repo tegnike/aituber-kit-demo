@@ -1,3 +1,7 @@
+export const config = {
+  runtime: 'edge',
+}
+
 // import { NextApiRequest, NextApiResponse } from 'next'
 
 // type MessageType = 'direct_send' | 'ai_generate' | 'user_input'
