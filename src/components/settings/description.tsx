@@ -13,6 +13,11 @@ const Description = () => {
           <div className="my-8 whitespace-pre-line">
             {t('AboutThisApplicationDescription')}
           </div>
+          <div className="my-8 whitespace-pre-line">
+            <a href="https://github.com/tegnike/aituber-kit">
+              https://github.com/tegnike/aituber-kit
+            </a>
+          </div>
         </div>
         <div className="my-40">
           <div className="mb-16 typography-20 font-bold">

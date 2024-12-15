@@ -3,6 +3,7 @@ import MessageReceiver from '@/components/messageReceiver'
 import { Introduction } from '@/components/introduction'
 import { Menu } from '@/components/menu'
 import { Meta } from '@/components/meta'
+import { CreatorLink } from '@/components/creatorLink'
 import ModalImage from '@/components/modalImage'
 import VrmViewer from '@/components/vrmViewer'
 import { Toasts } from '@/components/toasts'
@@ -20,6 +21,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-cover" style={{ backgroundImage: bgUrl }}>
       <Meta />
+      <CreatorLink />
       <Introduction />
       <VrmViewer />
       <Form />

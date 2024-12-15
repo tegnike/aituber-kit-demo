@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { GitHubLink } from '../githubLink'
+import { CreatorLink } from '../creatorLink'
 import { IconButton } from '../iconButton'
 import Description from './description'
 import Based from './based'
@@ -27,7 +27,7 @@ export default Settings
 const Header = ({ onClickClose }: Pick<Props, 'onClickClose'>) => {
   return (
     <>
-      <GitHubLink />
+      <CreatorLink />
       <div className="absolute m-24">
         <IconButton
           iconName="24/Close"
