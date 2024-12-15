@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next'
 
 import { GitHubLink } from '../githubLink'
 import { IconButton } from '../iconButton'
+import Description from './description'
 import Based from './based'
 import AI from './ai'
 import Voice from './voice'
 import YouTube from './youtube'
 import Slide from './slide'
 import Other from './other'
-
 type Props = {
   onClickClose: () => void
 }
@@ -40,13 +40,24 @@ const Header = ({ onClickClose }: Pick<Props, 'onClickClose'>) => {
 }
 
 // タブの定義
-type TabKey = 'general' | 'ai' | 'youtube' | 'voice' | 'slide' | 'other'
+type TabKey =
+  | 'description'
+  | 'general'
+  | 'ai'
+  | 'youtube'
+  | 'voice'
+  | 'slide'
+  | 'other'
 
 const Main = () => {
   const { t } = useTranslation()
-  const [activeTab, setActiveTab] = useState<TabKey>('general')
+  const [activeTab, setActiveTab] = useState<TabKey>('description')
 
   const tabs: { key: TabKey; label: string }[] = [
+    {
+      key: 'description',
+      label: t('Description'),
+    },
     {
       key: 'general',
       label: t('Settings'),
@@ -75,6 +86,8 @@ const Main = () => {
 
   const renderTabContent = () => {
     switch (activeTab) {
+      case 'description':
+        return <Description />
       case 'general':
         return <Based />
       case 'ai':

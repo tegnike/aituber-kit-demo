@@ -44,10 +44,10 @@ export const Introduction = () => {
           className="absolute top-8 right-8 bg-secondary hover:bg-secondary-hover active:bg-secondary-press disabled:bg-secondary-disabled text-white"
         ></IconButton>
         <div className="my-24">
-          <div className="my-8 font-bold typography-20 text-secondary ">
+          <div className="my-8 font-bold typography-20 text-secondary">
             {t('AboutThisApplication')}
           </div>
-          <div>
+          <div className="whitespace-pre-line">
             <Trans i18nKey="AboutThisApplicationDescription" />
           </div>
         </div>
