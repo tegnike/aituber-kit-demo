@@ -13,12 +13,17 @@ export default function VrmViewer() {
       const { selectedVrmPath } = settingsStore.getState()
       viewer.setup(canvas)
 
-      // VRM読み込み前にローディング状態をtrueに
       homeStore.setState({ isVrmLoading: true })
 
-      Promise.resolve(viewer.loadVrm(selectedVrmPath)).finally(() => {
-        homeStore.setState({ isVrmLoading: false })
-      })
+      viewer
+        .loadVrm(selectedVrmPath)
+        .then(() => {
+          homeStore.setState({ isVrmLoading: false })
+        })
+        .catch((error) => {
+          console.error('VRM loading failed:', error)
+          homeStore.setState({ isVrmLoading: false })
+        })
 
       // Drag and DropでVRMを差し替え
       canvas.addEventListener('dragover', function (event) {
