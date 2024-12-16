@@ -141,7 +141,10 @@ const Based = () => {
             const path = e.target.value
             settingsStore.setState({ selectedVrmPath: path })
             const { viewer } = homeStore.getState()
-            viewer.loadVrm(path)
+            homeStore.setState({ isVrmLoading: true })
+            Promise.resolve(viewer.loadVrm(path)).finally(() => {
+              homeStore.setState({ isVrmLoading: false })
+            })
           }}
         >
           {vrmFiles.map((file) => (

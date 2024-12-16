@@ -114,7 +114,7 @@
   "TechnologyIntroductionDescription": "This app uses the following technologies:\n- LLM: OpenAI gpt-4o (Dify)\n- TTS: NijiVoice\n- 3D Model: VRM",
   "Contact": "Contact",
   "ContactDescription": "For inquiries about this app, please contact us via the email address or Twitter account below.",
-  "Creator": "Creator Information", 
+  "Creator": "Creator Information",
   "CreatorDescription": "Creator: Nike",
   "Language": "Language",
   "UsingGSVITTS": "GSVI TTS",
