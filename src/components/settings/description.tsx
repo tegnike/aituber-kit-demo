@@ -18,6 +18,9 @@ const Description = () => {
               https://github.com/tegnike/aituber-kit
             </a>
           </div>
+          <div className="my-8 whitespace-pre-line">
+            {t('AboutThisApplicationDescription2')}
+          </div>
         </div>
         <div className="my-40">
           <div className="mb-16 typography-20 font-bold">

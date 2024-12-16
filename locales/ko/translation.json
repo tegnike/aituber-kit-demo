@@ -111,7 +111,7 @@
   "RepositoryURL": "리포지토리 URL:",
   "DontShowIntroductionNextTime": "다음에 이 대화 상자를 표시하지 않기",
   "Close": "닫기",
-  "TechnologyIntroductionDescription": "이 앱은 다음과 같은 기술을 사용합니다:\n- LLM: OpenAI gpt-4o (Dify)\n- TTS: NijiVoice\n- 3D 모델: VRM",
+  "TechnologyIntroductionDescription": "이 앱은 다음과 같은 기술을 사용합니다:\n- LLM: OpenAI gpt-4o (Dify)\n- TTS: NijiVoice (voice. Miria Hosenji)\n- 3D 모델: VRM",
   "Contact": "문의하기",
   "ContactDescription": "이 앱에 대한 문의는 아래 이메일 주소나 트위터 계정으로 연락해 주세요.",
   "Creator": "제작자 정보",

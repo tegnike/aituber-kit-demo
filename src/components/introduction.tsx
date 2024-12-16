@@ -50,6 +50,9 @@ export const Introduction = () => {
           <div className="whitespace-pre-line">
             <Trans i18nKey="AboutThisApplicationDescription" />
           </div>
+          <div className="whitespace-pre-line mt-8">
+            <Trans i18nKey="AboutThisApplicationDescription2" />
+          </div>
         </div>
         <div className="my-24">
           <div className="my-8 font-bold typography-20 text-secondary">
