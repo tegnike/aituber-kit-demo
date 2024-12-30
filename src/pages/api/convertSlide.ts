@@ -164,11 +164,12 @@ export const config = {
 //     ? `Previous slide content: ${previousResult}`
 //     : 'This is the first slide.'
 
-//   const aiServiceConfig: AIServiceConfig = {
-//     openai: () => createOpenAI({ apiKey }),
-//     anthropic: () => createAnthropic({ apiKey }),
-//     google: () => createGoogleGenerativeAI({ apiKey }),
-//   }
+// const aiServiceConfig: AIServiceConfig = {
+//   openai: () => createOpenAI({ apiKey }),
+//   anthropic: () => createAnthropic({ apiKey }),
+//   google: () => createGoogleGenerativeAI({ apiKey }),
+//   azure: () => {},
+// }
 
 //   const aiServiceInstance = aiServiceConfig[aiService as multiModalAIServiceKey]
 

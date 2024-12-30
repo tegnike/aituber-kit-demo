@@ -16,6 +16,7 @@ import toastStore from '@/features/stores/toast'
 import i18next from 'i18next'
 import { SpeakQueue } from './speakQueue'
 import { synthesizeVoiceNijivoiceApi } from './synthesizeVoiceNijivoice'
+import { Live2DHandler } from './live2dHandler'
 
 interface EnglishToJapanese {
   [key: string]: string
@@ -91,7 +92,8 @@ const createSpeakCharacter = () => {
             ss.voicevoxSpeaker,
             ss.voicevoxSpeed,
             ss.voicevoxPitch,
-            ss.voicevoxIntonation
+            ss.voicevoxIntonation,
+            ss.voicevoxServerUrl
           )
         } else if (ss.selectVoice == 'google') {
           buffer = await synthesizeVoiceGoogleApi(
@@ -116,7 +118,8 @@ const createSpeakCharacter = () => {
             ss.aivisSpeechSpeaker,
             ss.aivisSpeechSpeed,
             ss.aivisSpeechPitch,
-            ss.aivisSpeechIntonation
+            ss.aivisSpeechIntonation,
+            ss.aivisSpeechServerUrl
           )
         } else if (ss.selectVoice == 'gsvitts') {
           buffer = await synthesizeVoiceGSVIApi(
@@ -154,7 +157,9 @@ const createSpeakCharacter = () => {
             talk,
             ss.nijivoiceApiKey,
             ss.nijivoiceActorId,
-            ss.nijivoiceSpeed
+            ss.nijivoiceSpeed,
+            ss.nijivoiceEmotionalLevel,
+            ss.nijivoiceSoundDuration
           )
         }
       } catch (error) {
@@ -230,18 +235,24 @@ export const testVoiceVox = async () => {
     ss.voicevoxSpeaker,
     ss.voicevoxSpeed,
     ss.voicevoxPitch,
-    ss.voicevoxIntonation
+    ss.voicevoxIntonation,
+    ss.voicevoxServerUrl
   ).catch(() => null)
   if (buffer) {
-    const hs = homeStore.getState()
-    await hs.viewer.model?.speak(buffer, talk)
+    const ss = settingsStore.getState()
+    if (ss.modelType === 'vrm') {
+      const hs = homeStore.getState()
+      await hs.viewer.model?.speak(buffer, talk)
+    } else if (ss.modelType === 'live2d') {
+      Live2DHandler.speak(buffer, talk)
+    }
   }
 }
 
 export const testAivisSpeech = async () => {
   const ss = settingsStore.getState()
   const talk: Talk = {
-    message: 'AIVIS Speechを使用します',
+    message: 'AivisSpeechを使用します',
     emotion: 'neutral',
   }
   const buffer = await synthesizeVoiceAivisSpeechApi(
@@ -249,10 +260,16 @@ export const testAivisSpeech = async () => {
     ss.aivisSpeechSpeaker,
     ss.aivisSpeechSpeed,
     ss.aivisSpeechPitch,
-    ss.aivisSpeechIntonation
+    ss.aivisSpeechIntonation,
+    ss.aivisSpeechServerUrl
   ).catch(() => null)
   if (buffer) {
-    const hs = homeStore.getState()
-    await hs.viewer.model?.speak(buffer, talk)
+    const ss = settingsStore.getState()
+    if (ss.modelType === 'vrm') {
+      const hs = homeStore.getState()
+      await hs.viewer.model?.speak(buffer, talk)
+    } else if (ss.modelType === 'live2d') {
+      Live2DHandler.speak(buffer, talk)
+    }
   }
 }

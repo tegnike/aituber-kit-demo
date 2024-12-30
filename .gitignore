@@ -25,7 +25,8 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# local env files
+# env files
+.env
 .env*.local
 .env
 
@@ -47,3 +48,6 @@ certificates
 !/public/slides/demo/
 
 /logs/*
+
+public/live2d/*
+!public/live2d/nike01

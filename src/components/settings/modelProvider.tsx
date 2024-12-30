@@ -55,7 +55,7 @@ const ModelProvider = () => {
     anthropic: 'claude-3-5-sonnet-20241022',
     google: 'gemini-1.5-flash-latest',
     azure: '',
-    groq: 'gemma-7b-it',
+    groq: 'gemma2-9b-it',
     cohere: 'command-r-plus',
     mistralai: 'mistral-large-latest',
     perplexity: 'llama-3-sonar-large-32k-online',
@@ -96,6 +96,9 @@ const ModelProvider = () => {
     })
     if (newMode) {
       settingsStore.setState({ audioMode: false })
+      settingsStore.setState({
+        selectAIModel: 'gpt-4o-realtime-preview-2024-12-17',
+      })
     }
   }, [])
 
@@ -105,6 +108,9 @@ const ModelProvider = () => {
     })
     if (newMode) {
       settingsStore.setState({ realtimeAPIMode: false })
+      settingsStore.setState({
+        selectAIModel: 'gpt-4o-audio-preview-2024-12-17',
+      })
     }
   }, [])
 
@@ -299,6 +305,143 @@ const ModelProvider = () => {
                   </>
                 )}
               </div>
+              {realtimeAPIMode && (
+                <>
+                  <div className="my-16 font-bold">
+                    {t('RealtimeAPIModeContentType')}
+                  </div>
+                  <select
+                    className="px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
+                    value={realtimeAPIModeContentType}
+                    onChange={(e) => {
+                      const model = e.target.value
+                      settingsStore.setState({
+                        realtimeAPIModeContentType:
+                          model as RealtimeAPIModeContentType,
+                      })
+                    }}
+                  >
+                    <option value="input_text">{t('InputText')}</option>
+                    <option value="input_audio">{t('InputAudio')}</option>
+                  </select>
+                  <div className="my-16 font-bold">
+                    {t('RealtimeAPIModeVoice')}
+                  </div>
+                  <select
+                    className="px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
+                    value={realtimeAPIModeVoice}
+                    onChange={(e) => {
+                      const model = e.target.value
+                      settingsStore.setState({
+                        realtimeAPIModeVoice: model as RealtimeAPIModeVoice,
+                      })
+                    }}
+                  >
+                    <option value="alloy">alloy</option>
+                    <option value="ash">ash</option>
+                    <option value="ballad">ballad</option>
+                    <option value="coral">coral</option>
+                    <option value="echo">echo</option>
+                    <option value="sage">sage</option>
+                    <option value="shimmer">shimmer</option>
+                    <option value="verse">verse</option>
+                  </select>
+                  <div className="my-24">
+                    <div className="my-16 typography-16 font-bold">
+                      {t('SelectModel')}
+                    </div>
+                    <select
+                      className="px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
+                      value={selectAIModel}
+                      onChange={(e) => {
+                        const model = e.target.value
+                        settingsStore.setState({ selectAIModel: model })
+                      }}
+                    >
+                      <option value="gpt-4o-realtime-preview-2024-10-01">
+                        gpt-4o-realtime-preview-2024-10-01
+                      </option>
+                      <option value="gpt-4o-realtime-preview-2024-12-17">
+                        gpt-4o-realtime-preview-2024-12-17
+                      </option>
+                      <option value="gpt-4o-mini-realtime-preview-2024-12-17">
+                        gpt-4o-mini-realtime-preview-2024-12-17
+                      </option>
+                    </select>
+                  </div>
+                  <div className="my-16">
+                    <div className="my-16">
+                      {t('UpdateRealtimeAPISettingsInfo')}
+                    </div>
+                    <TextButton onClick={handleUpdate}>
+                      {t('UpdateRealtimeAPISettings')}
+                    </TextButton>
+                  </div>
+                </>
+              )}
+              {audioMode && (
+                <>
+                  <div className="my-16 font-bold">
+                    {t('RealtimeAPIModeContentType')}
+                  </div>
+                  <select
+                    className="px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
+                    value={audioModeInputType}
+                    onChange={(e) => {
+                      const model = e.target.value
+                      settingsStore.setState({
+                        audioModeInputType: model as AudioModeInputType,
+                      })
+                    }}
+                  >
+                    <option value="input_text">{t('InputText')}</option>
+                    <option value="input_audio">{t('InputAudio')}</option>
+                  </select>
+                  <div className="my-16 font-bold">
+                    {t('RealtimeAPIModeVoice')}
+                  </div>
+                  <select
+                    className="px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
+                    value={audioModeVoice}
+                    onChange={(e) => {
+                      const model = e.target.value
+                      settingsStore.setState({
+                        audioModeVoice: model as OpenAITTSVoice,
+                      })
+                    }}
+                  >
+                    <option value="alloy">alloy</option>
+                    <option value="echo">echo</option>
+                    <option value="fable">fable</option>
+                    <option value="onyx">onyx</option>
+                    <option value="nova">nova</option>
+                    <option value="shimmer">shimmer</option>
+                  </select>
+                  <div className="my-24">
+                    <div className="my-16 typography-16 font-bold">
+                      {t('SelectModel')}
+                    </div>
+                    <select
+                      className="px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
+                      value={selectAIModel}
+                      onChange={(e) => {
+                        const model = e.target.value
+                        settingsStore.setState({ selectAIModel: model })
+                      }}
+                    >
+                      <option value="gpt-4o-audio-preview-2024-10-01">
+                        gpt-4o-audio-preview-2024-10-01
+                      </option>
+                      <option value="gpt-4o-audio-preview-2024-12-17">
+                        gpt-4o-audio-preview-2024-12-17
+                      </option>
+                      <option value="gpt-4o-mini-audio-preview-2024-12-17">
+                        gpt-4o-mini-audio-preview-2024-12-17
+                      </option>
+                    </select>
+                  </div>
+                </>
+              )}
               {!realtimeAPIMode && !audioMode && (
                 <div className="my-24">
                   <div className="my-16 typography-20 font-bold">
@@ -605,8 +748,10 @@ const ModelProvider = () => {
                   }
                   disabled
                 >
-                  <option value="gemma-7b-it">gemma-7b-it</option>
-                  <option value="llama3-70b-8192">llama3-70b-8192</option>
+                  <option value="gemma2-9b-it">gemma2-9b-it</option>
+                  <option value="llama-3.3-70b-versatile">
+                    llama-3.3-70b-versatile
+                  </option>
                   <option value="llama3-8b-8192">llama3-8b-8192</option>
                   <option value="mixtral-8x7b-32768">mixtral-8x7b-32768</option>
                 </select>
@@ -940,8 +1085,12 @@ const ModelProvider = () => {
           <div className="my-16 typography-20 font-bold">
             {t('CharacterSettingsPrompt')}
           </div>
-          {selectAIService === 'dify' && (
+          {selectAIService === 'dify' ? (
             <div className="my-16">{t('DifyInstruction')}</div>
+          ) : (
+            <div className="my-16 whitespace-pre-line">
+              {t('CharacterSettingsInfo')}
+            </div>
           )}
           <TextButton
             onClick={() =>

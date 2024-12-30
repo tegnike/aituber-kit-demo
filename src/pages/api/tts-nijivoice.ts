@@ -12,7 +12,8 @@ export default async function handler(req: NextRequest) {
   }
 
   const body = await req.json()
-  const { script, speed, voiceActorId, apiKey } = body
+  const { script, speed, voiceActorId, apiKey, emotionalLevel, soundDuration } =
+    req.body
 
   const nijivoiceApiKey = apiKey || process.env.NIJIVOICE_API_KEY
   if (!nijivoiceApiKey) {
@@ -34,6 +35,8 @@ export default async function handler(req: NextRequest) {
           script,
           speed: speed.toString(),
           format: 'wav',
+          emotionalLevel: emotionalLevel.toString(),
+          soundDuration: soundDuration.toString(),
         }),
       }
     )
