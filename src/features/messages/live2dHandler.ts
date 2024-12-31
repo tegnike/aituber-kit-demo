@@ -61,82 +61,70 @@ export class Live2DHandler {
     // AudioContextの取得と状態確認
     const audioContext = this.getAudioContext()
     if (audioContext.state === 'suspended') {
+      await audioContext.resume()
+    }
+
+    let decodedAudio: AudioBuffer
+
+    if (isNeedDecode) {
       try {
-        await audioContext.resume()
-      } catch (error) {
-        console.error('Failed to resume AudioContext:', error)
-      }
-    }
-
-    let audioUrl: string
-    try {
-      let decodedAudio: AudioBuffer
-      if (isNeedDecode) {
         decodedAudio = await audioContext.decodeAudioData(audioBuffer)
-      } else {
-        // PCM16形式の場合
-        const pcmData = new Int16Array(audioBuffer)
-        const floatData = new Float32Array(pcmData.length)
-        for (let i = 0; i < pcmData.length; i++) {
-          floatData[i] =
-            pcmData[i] < 0 ? pcmData[i] / 32768.0 : pcmData[i] / 32767.0
-        }
-        decodedAudio = audioContext.createBuffer(1, floatData.length, 24000) // sampleRateは必要に応じて調整
-        decodedAudio.getChannelData(0).set(floatData)
+      } catch (error) {
+        console.error('Failed to decode audio:', error)
+        throw error
       }
-
-      const offlineContext = new OfflineAudioContext(
-        decodedAudio.numberOfChannels,
-        decodedAudio.length,
-        decodedAudio.sampleRate
-      )
-      const source = offlineContext.createBufferSource()
-      source.buffer = decodedAudio
-      source.connect(offlineContext.destination)
-      source.start()
-
-      const renderedBuffer = await offlineContext.startRendering()
-      const audioBlob = await new Blob(
-        [this.audioBufferToWav(renderedBuffer)],
-        {
-          type: 'audio/wav',
-        }
-      )
-      audioUrl = URL.createObjectURL(audioBlob)
-
-      // Live2Dモデルの表情とモーションを設定
-      if (expression) {
-        live2dViewer.expression(expression)
+    } else {
+      // PCM16形式の場合
+      const pcmData = new Int16Array(audioBuffer)
+      const floatData = new Float32Array(pcmData.length)
+      for (let i = 0; i < pcmData.length; i++) {
+        floatData[i] =
+          pcmData[i] < 0 ? pcmData[i] / 32768.0 : pcmData[i] / 32767.0
       }
-      if (motion) {
-        Live2DHandler.stopIdleMotion()
-        live2dViewer.motion(motion, undefined, 3)
-      }
-
-      // 音声再生の完了を待つ
-      await new Promise<void>((resolve, reject) => {
-        const audio = new Audio(audioUrl)
-        audio.onerror = (e) => {
-          console.error('Audio playback error:', e)
-          reject(e)
-        }
-        audio.onended = () => {
-          resolve()
-        }
-        audio.oncanplay = () => {
-          // live2dViewer.speakを先に呼び出し
-          live2dViewer.speak(audioUrl)
-          // 実際の音声再生は行わない（live2dViewer.speakに任せる）
-        }
-        // プリロードを開始
-        audio.load()
-      }).finally(() => {
-        URL.revokeObjectURL(audioUrl)
-      })
-    } catch (error) {
-      console.error('Audio processing failed:', error)
-      throw error
+      decodedAudio = audioContext.createBuffer(1, floatData.length, 24000) // sampleRateは必要に応じて調整
+      decodedAudio.getChannelData(0).set(floatData)
     }
+
+    // デコードされた音声データをBlobに変換
+    const offlineContext = new OfflineAudioContext(
+      decodedAudio.numberOfChannels,
+      decodedAudio.length,
+      decodedAudio.sampleRate
+    )
+    const source = offlineContext.createBufferSource()
+    source.buffer = decodedAudio
+    source.connect(offlineContext.destination)
+    source.start()
+
+    const renderedBuffer = await offlineContext.startRendering()
+    const audioBlob = await new Blob([this.audioBufferToWav(renderedBuffer)], {
+      type: 'audio/wav',
+    })
+    const audioUrl = URL.createObjectURL(audioBlob)
+
+    // Live2Dモデルの表情を設定
+    if (expression) {
+      live2dViewer.expression(expression)
+    }
+    if (motion) {
+      Live2DHandler.stopIdleMotion()
+      live2dViewer.motion(motion, undefined, 3)
+    }
+
+    // 音声再生の完了を待つ
+    // live2dViewer.speakでは音声完了を検知できないので、Audioオブジェクトを使用して音声再生完了を検知している
+    // Audioオブジェクトの方も再生すると二重に聞こえてしまうので、再生音量を最低限に設定
+    // TODO: もっといい方法があればそれに変更する
+    await new Promise<void>((resolve) => {
+      const audio = new Audio(audioUrl)
+      audio.volume = 0.01
+      audio.onended = () => {
+        resolve()
+        URL.revokeObjectURL(audioUrl)
+      }
+      audio.play()
+      live2dViewer.speak(audioUrl)
+    })
   }
 
   static async resetToIdle() {
