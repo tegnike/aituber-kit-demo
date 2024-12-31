@@ -30,6 +30,8 @@ const Live2DComponent = () => {
   const [isDragging, setIsDragging] = useState(false)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
   const selectedLive2DPath = settingsStore((state) => state.selectedLive2DPath)
+  const [touchDistance, setTouchDistance] = useState<number | null>(null)
+  const [initialScale, setInitialScale] = useState<number | null>(null)
 
   useEffect(() => {
     initApp()
@@ -184,6 +186,71 @@ const Live2DComponent = () => {
       onResize.cancel() // クリーンアップ時にデバウンスをキャンセル
     }
   }, [app, model])
+
+  useEffect(() => {
+    if (!canvasContainerRef.current || !model) return
+
+    const canvas = canvasContainerRef.current
+
+    // タッチ操作時の2点間の距離を計算
+    const getTouchDistance = (touches: TouchList) => {
+      if (touches.length < 2) return null
+      const dx = touches[0].clientX - touches[1].clientX
+      const dy = touches[0].clientY - touches[1].clientY
+      return Math.sqrt(dx * dx + dy * dy)
+    }
+
+    const handleTouchStart = (event: TouchEvent) => {
+      if (event.touches.length === 2) {
+        // ピンチ開始時の距離と現在のスケールを保存
+        const distance = getTouchDistance(event.touches)
+        setTouchDistance(distance)
+        setInitialScale(model.scale.x)
+      } else if (event.touches.length === 1) {
+        // 単一タッチの場合はドラッグ開始
+        setIsDragging(true)
+        setDragOffset({
+          x: event.touches[0].clientX - model.x,
+          y: event.touches[0].clientY - model.y,
+        })
+      }
+    }
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (event.touches.length === 2 && touchDistance && initialScale) {
+        // ピンチズーム処理
+        const currentDistance = getTouchDistance(event.touches)
+        const scale = (currentDistance / touchDistance) * initialScale
+
+        // スケールを0.1から2.0の間に制限
+        const newScale = Math.min(Math.max(scale, 0.1), 2.0)
+        model.scale.set(newScale)
+      } else if (isDragging && event.touches.length === 1) {
+        // 単一タッチの場合はドラッグ処理
+        model.x = event.touches[0].clientX - dragOffset.x
+        model.y = event.touches[0].clientY - dragOffset.y
+      }
+    }
+
+    const handleTouchEnd = () => {
+      setIsDragging(false)
+      setTouchDistance(null)
+      setInitialScale(null)
+    }
+
+    // タッチイベントリスナーの追加
+    canvas.addEventListener('touchstart', handleTouchStart)
+    canvas.addEventListener('touchmove', handleTouchMove)
+    canvas.addEventListener('touchend', handleTouchEnd)
+
+    // クリーンアップ関数
+    return () => {
+      canvas.removeEventListener('touchstart', handleTouchStart)
+      canvas.removeEventListener('touchmove', handleTouchMove)
+      canvas.removeEventListener('touchend', handleTouchEnd)
+      // ... 既存のイベントリスナーの削除 ...
+    }
+  }, [model, isDragging, dragOffset, touchDistance, initialScale])
 
   return (
     <div className="w-screen h-screen">
