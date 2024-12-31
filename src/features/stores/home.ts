@@ -11,6 +11,7 @@ export interface PersistedState {
   chatLog: Message[]
   showIntroduction: boolean
   isVrmLoading: boolean
+  sessionId: string | null
 }
 
 export interface TransientState {
@@ -43,6 +44,7 @@ const homeStore = create<HomeState>()(
       chatLog: [],
       showIntroduction: process.env.NEXT_PUBLIC_SHOW_INTRODUCTION !== 'false',
       isVrmLoading: false,
+      sessionId: null,
       assistantMessage: '',
 
       // transient states
@@ -75,9 +77,10 @@ const homeStore = create<HomeState>()(
     }),
     {
       name: 'aitube-kit-home',
-      partialize: ({ chatLog, showIntroduction }) => ({
+      partialize: ({ chatLog, showIntroduction, sessionId }) => ({
         chatLog: messageSelectors.cutImageMessage(chatLog),
         showIntroduction,
+        sessionId,
       }),
     }
   )
@@ -85,17 +88,29 @@ const homeStore = create<HomeState>()(
 
 // chatLogの変更を監視して保存
 homeStore.subscribe((state, prevState) => {
-  if (state.chatLog !== prevState.chatLog && state.chatLog.length > 0) {
-    fetch('/api/save-chat-log', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        messages: state.chatLog,
-        isNewFile: prevState.chatLog.length === 0,
-      }),
-    }).catch((error) => console.error('Error saving chat log:', error))
+  if (state.chatLog !== prevState.chatLog) {
+    if (state.chatLog.length === 0 && prevState.chatLog.length > 0) {
+      homeStore.setState({ sessionId: null })
+    } else if (state.chatLog.length > 0) {
+      fetch('/api/save-chat-log', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: state.chatLog,
+          sessionId: state.sessionId,
+          isNewFile: prevState.chatLog.length === 0,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.sessionId) {
+            homeStore.setState({ sessionId: data.sessionId })
+          }
+        })
+        .catch((error) => console.error('Error saving chat log:', error))
+    }
   }
 })
 
