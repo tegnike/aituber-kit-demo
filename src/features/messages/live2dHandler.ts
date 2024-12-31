@@ -4,6 +4,7 @@ import settingsStore from '@/features/stores/settings'
 
 export class Live2DHandler {
   private static idleMotionInterval: NodeJS.Timeout | null = null // インターバルIDを保持
+  private static audioContext: AudioContext | null = null
 
   static async speak(
     audioBuffer: ArrayBuffer,
@@ -49,13 +50,28 @@ export class Live2DHandler {
         break
     }
 
-    // AudioContextの作成
-    const audioContext = new AudioContext()
+    // AudioContextの作成と状態チェック
+    if (!this.audioContext) {
+      this.audioContext = new AudioContext()
+    }
+
+    if (this.audioContext.state === 'suspended') {
+      try {
+        await this.audioContext.resume()
+      } catch (error) {
+        console.warn('Failed to resume AudioContext:', error)
+      }
+    }
+
     let decodedAudio: AudioBuffer
 
     if (isNeedDecode) {
-      // 圧縮音声の場合
-      decodedAudio = await audioContext.decodeAudioData(audioBuffer)
+      try {
+        decodedAudio = await this.audioContext.decodeAudioData(audioBuffer)
+      } catch (error) {
+        console.error('Failed to decode audio:', error)
+        return
+      }
     } else {
       // PCM16形式の場合
       const pcmData = new Int16Array(audioBuffer)
@@ -64,7 +80,7 @@ export class Live2DHandler {
         floatData[i] =
           pcmData[i] < 0 ? pcmData[i] / 32768.0 : pcmData[i] / 32767.0
       }
-      decodedAudio = audioContext.createBuffer(1, floatData.length, 24000) // sampleRateは必要に応じて調整
+      decodedAudio = this.audioContext.createBuffer(1, floatData.length, 24000)
       decodedAudio.getChannelData(0).set(floatData)
     }
 
