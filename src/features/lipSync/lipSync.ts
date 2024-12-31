@@ -10,6 +10,13 @@ export class LipSync {
   public constructor(audio: AudioContext) {
     this.audio = audio
 
+    // AudioContextの状態確認と再開処理を追加
+    if (this.audio.state === 'suspended') {
+      this.audio.resume().catch((error) => {
+        console.warn('AudioContext resume failed:', error)
+      })
+    }
+
     this.analyser = audio.createAnalyser()
     this.timeDomainData = new Float32Array(TIME_DOMAIN_DATA_LENGTH)
   }
@@ -38,6 +45,11 @@ export class LipSync {
     sampleRate: number = 24000
   ) {
     try {
+      // AudioContextの状態を確認
+      if (this.audio.state === 'suspended') {
+        await this.audio.resume()
+      }
+
       // バッファの型チェック
       if (!(buffer instanceof ArrayBuffer)) {
         throw new Error('The input buffer is not in ArrayBuffer format')
