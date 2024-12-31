@@ -92,6 +92,7 @@ homeStore.subscribe((state, prevState) => {
     if (state.chatLog.length === 0 && prevState.chatLog.length > 0) {
       homeStore.setState({ sessionId: null })
     } else if (state.chatLog.length > 0) {
+      const isNewSession = !state.sessionId
       fetch('/api/save-chat-log', {
         method: 'POST',
         headers: {
@@ -100,12 +101,12 @@ homeStore.subscribe((state, prevState) => {
         body: JSON.stringify({
           messages: state.chatLog,
           sessionId: state.sessionId,
-          isNewFile: prevState.chatLog.length === 0,
+          isNewFile: isNewSession,
         }),
       })
         .then((response) => response.json())
         .then((data) => {
-          if (data.sessionId) {
+          if (isNewSession && data.sessionId) {
             homeStore.setState({ sessionId: data.sessionId })
           }
         })

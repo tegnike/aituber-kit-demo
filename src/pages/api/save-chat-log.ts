@@ -26,6 +26,7 @@ export default async function handler(req: Request): Promise<Response> {
   try {
     const { messages, sessionId, isNewFile } = await req.json()
     const created_at = new Date().toISOString()
+    let currentSessionId = sessionId
 
     // メッセージ内の画像データを省略
     const processedMessages = messages.map((msg: any) => {
@@ -48,8 +49,6 @@ export default async function handler(req: Request): Promise<Response> {
 
     // TODO: 標準化する
     if (supabase) {
-      let currentSessionId = sessionId
-
       if (!currentSessionId) {
         const sessionTitle = `Session_${crypto.randomUUID()}`
         // 新しいセッションを作成
@@ -91,12 +90,18 @@ export default async function handler(req: Request): Promise<Response> {
       if (messageError) throw messageError
     }
 
-    return new Response(JSON.stringify({ message: 'Log saved successfully' }), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    return new Response(
+      JSON.stringify({
+        message: 'Log saved successfully',
+        sessionId: currentSessionId, // 新しく作成したセッションIDを返す
+      }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
   } catch (error) {
     console.error('Error saving chat log:', error)
     return new Response(JSON.stringify({ message: 'Error saving chat log' }), {
