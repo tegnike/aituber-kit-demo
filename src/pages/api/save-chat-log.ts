@@ -49,7 +49,32 @@ export default async function handler(req: Request): Promise<Response> {
 
     // TODO: 標準化する
     if (supabase) {
-      if (!currentSessionId) {
+      // セッションIDが指定されている場合、存在確認を行う
+      if (currentSessionId) {
+        const { data: existingSession } = await supabase
+          .from('public_chat_sessions')
+          .select('id')
+          .eq('id', currentSessionId)
+          .single()
+
+        // セッションが存在しない場合は新規作成
+        if (!existingSession) {
+          const sessionTitle = `Session_${crypto.randomUUID()}`
+          const { data: newSession, error: sessionError } = await supabase
+            .from('public_chat_sessions')
+            .insert({
+              id: currentSessionId, // 既存のIDを使用
+              title: sessionTitle,
+              created_at: created_at,
+              updated_at: created_at,
+            })
+            .select()
+            .single()
+
+          if (sessionError) throw sessionError
+        }
+      } else {
+        // セッションIDがない場合は新規作成（既存のコード）
         const sessionTitle = `Session_${crypto.randomUUID()}`
         // 新しいセッションを作成
         const { data: newSession, error: sessionError } = await supabase
