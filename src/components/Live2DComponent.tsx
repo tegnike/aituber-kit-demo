@@ -220,11 +220,13 @@ const Live2DComponent = () => {
       if (event.touches.length === 2 && touchDistance && initialScale) {
         // ピンチズーム処理
         const currentDistance = getTouchDistance(event.touches)
-        const scale = (currentDistance / touchDistance) * initialScale
+        if (currentDistance && touchDistance && initialScale) {
+          const scale = (currentDistance / touchDistance) * initialScale
 
-        // スケールを0.1から2.0の間に制限
-        const newScale = Math.min(Math.max(scale, 0.1), 2.0)
-        model.scale.set(newScale)
+          // スケールを0.1から2.0の間に制限
+          const newScale = Math.min(Math.max(scale, 0.1), 2.0)
+          model.scale.set(newScale)
+        }
       } else if (isDragging && event.touches.length === 1) {
         // 単一タッチの場合はドラッグ処理
         model.x = event.touches[0].clientX - dragOffset.x
