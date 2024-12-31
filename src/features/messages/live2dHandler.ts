@@ -4,7 +4,7 @@ import settingsStore from '@/features/stores/settings'
 
 export class Live2DHandler {
   private static idleMotionInterval: NodeJS.Timeout | null = null // インターバルIDを保持
-  private static audioContext: AudioContext | null = null
+  public static audioContext: AudioContext | null = null
 
   static async speak(
     audioBuffer: ArrayBuffer,
