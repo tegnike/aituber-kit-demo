@@ -32,6 +32,7 @@ export interface TransientState {
   setIsCubismCoreLoaded: (loaded: boolean) => void
   isLive2dLoaded: boolean
   setIsLive2dLoaded: (loaded: boolean) => void
+  isCreatingSession: boolean
 }
 
 export type HomeState = PersistedState & TransientState
@@ -74,6 +75,7 @@ const homeStore = create<HomeState>()(
         set(() => ({ isCubismCoreLoaded: loaded })),
       isLive2dLoaded: false,
       setIsLive2dLoaded: (loaded) => set(() => ({ isLive2dLoaded: loaded })),
+      isCreatingSession: false,
     }),
     {
       name: 'aitube-kit-home',
@@ -92,7 +94,12 @@ homeStore.subscribe((state, prevState) => {
     if (state.chatLog.length === 0 && prevState.chatLog.length > 0) {
       homeStore.setState({ sessionId: null })
     } else if (state.chatLog.length > 0) {
-      const isNewSession = !state.sessionId
+      const isNewSession = !state.sessionId && !state.isCreatingSession
+
+      if (isNewSession) {
+        homeStore.setState({ isCreatingSession: true })
+      }
+
       fetch('/api/save-chat-log', {
         method: 'POST',
         headers: {
@@ -107,10 +114,18 @@ homeStore.subscribe((state, prevState) => {
         .then((response) => response.json())
         .then((data) => {
           if (isNewSession && data.sessionId) {
-            homeStore.setState({ sessionId: data.sessionId })
+            homeStore.setState({
+              sessionId: data.sessionId,
+              isCreatingSession: false,
+            })
           }
         })
-        .catch((error) => console.error('Error saving chat log:', error))
+        .catch((error) => {
+          console.error('Error saving chat log:', error)
+          if (isNewSession) {
+            homeStore.setState({ isCreatingSession: false })
+          }
+        })
     }
   }
 })
