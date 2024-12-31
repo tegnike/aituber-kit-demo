@@ -10,7 +10,7 @@ export interface PersistedState {
   userOnboarded: boolean
   chatLog: Message[]
   showIntroduction: boolean
-  isVrmLoading: boolean
+  isModelLoading: boolean
   sessionId: string | null
 }
 
@@ -44,7 +44,7 @@ const homeStore = create<HomeState>()(
       userOnboarded: false,
       chatLog: [],
       showIntroduction: process.env.NEXT_PUBLIC_SHOW_INTRODUCTION !== 'false',
-      isVrmLoading: false,
+      isModelLoading: false,
       sessionId: null,
       assistantMessage: '',
 

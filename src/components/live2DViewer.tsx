@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Script from 'next/script'
 import homeStore from '@/features/stores/home'
+import Image from 'next/image'
 
 const Live2DComponent = dynamic(
   () => {
@@ -39,6 +40,7 @@ export default function Live2DViewer() {
   const setIsCubismCoreLoaded = homeStore((s) => s.setIsCubismCoreLoaded)
   const isLive2dLoaded = homeStore((s) => s.isLive2dLoaded)
   const setIsLive2dLoaded = homeStore((s) => s.setIsLive2dLoaded)
+  const isModelLoading = homeStore((s) => s.isModelLoading)
 
   // スクリプトの再読み込み処理
   const retryLoadScript = (scriptName: 'cubismcore' | 'live2d') => {
@@ -73,9 +75,11 @@ export default function Live2DViewer() {
         onLoad={() => {
           console.log('cubismcore loaded')
           setIsCubismCoreLoaded(true)
+          homeStore.setState({ isModelLoading: true })
         }}
         onError={() => {
           console.error('Failed to load cubism core')
+          homeStore.setState({ isModelLoading: false })
           if (retryLoadScript('cubismcore')) {
             console.log('Retrying cubismcore load...')
           } else {
@@ -90,9 +94,11 @@ export default function Live2DViewer() {
           onLoad={() => {
             console.log('live2d loaded')
             setIsLive2dLoaded(true)
+            homeStore.setState({ isModelLoading: false })
           }}
           onError={() => {
             console.error('Failed to load live2d')
+            homeStore.setState({ isModelLoading: false })
             if (retryLoadScript('live2d')) {
               console.log('Retrying live2d load...')
             } else {
@@ -102,6 +108,18 @@ export default function Live2DViewer() {
         />
       )}
       {isCubismCoreLoaded && isLive2dLoaded && <Live2DComponent />}
+      {isModelLoading && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <Image
+            src="/nikechan_run_loading.gif"
+            alt="Loading..."
+            width={800}
+            height={200}
+            priority
+            unoptimized
+          />
+        </div>
+      )}
     </div>
   )
 }

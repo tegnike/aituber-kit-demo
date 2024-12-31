@@ -5,7 +5,7 @@ import homeStore from '@/features/stores/home'
 import settingsStore from '@/features/stores/settings'
 
 export default function VrmViewer() {
-  const isVrmLoading = homeStore((state) => state.isVrmLoading)
+  const isModelLoading = homeStore((state) => state.isModelLoading)
 
   const canvasRef = useCallback((canvas: HTMLCanvasElement) => {
     if (canvas) {
@@ -13,16 +13,16 @@ export default function VrmViewer() {
       const { selectedVrmPath } = settingsStore.getState()
       viewer.setup(canvas)
 
-      homeStore.setState({ isVrmLoading: true })
+      homeStore.setState({ isModelLoading: true })
 
       viewer
         .loadVrm(selectedVrmPath)
         .then(() => {
-          homeStore.setState({ isVrmLoading: false })
+          homeStore.setState({ isModelLoading: false })
         })
         .catch((error) => {
           console.error('VRM loading failed:', error)
-          homeStore.setState({ isVrmLoading: false })
+          homeStore.setState({ isModelLoading: false })
         })
 
       // Drag and DropでVRMを差し替え
@@ -46,10 +46,10 @@ export default function VrmViewer() {
         if (file_type === 'vrm') {
           const blob = new Blob([file], { type: 'application/octet-stream' })
           const url = window.URL.createObjectURL(blob)
-          homeStore.setState({ isVrmLoading: true })
+          homeStore.setState({ isModelLoading: true })
 
           Promise.resolve(viewer.loadVrm(url)).finally(() => {
-            homeStore.setState({ isVrmLoading: false })
+            homeStore.setState({ isModelLoading: false })
           })
         } else if (file.type.startsWith('image/')) {
           const reader = new FileReader()
@@ -66,7 +66,7 @@ export default function VrmViewer() {
   return (
     <div className={'absolute top-0 left-0 w-screen h-[100svh] z-5'}>
       <canvas ref={canvasRef} className={'h-full w-full'}></canvas>
-      {isVrmLoading && (
+      {isModelLoading && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <Image
             src="/nikechan_run_loading.gif"
@@ -74,6 +74,7 @@ export default function VrmViewer() {
             width={800}
             height={200}
             priority
+            unoptimized
           />
         </div>
       )}
