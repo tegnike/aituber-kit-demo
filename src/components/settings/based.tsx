@@ -289,7 +289,9 @@ const Based = () => {
         <div className="mt-24 mb-16 typography-20 font-bold">
           {t('CharacterModelLabel')}
         </div>
-        <div className="mb-16 typography-16">{t('CharacterModelInfo')}</div>
+        <div className="mb-16 typography-16 whitespace-pre-line">
+          {t('CharacterModelInfo')}
+        </div>
 
         <div className="flex gap-4 mb-8">
           <button
