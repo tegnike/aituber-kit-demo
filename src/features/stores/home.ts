@@ -11,7 +11,7 @@ export interface PersistedState {
   chatLog: Message[]
   showIntroduction: boolean
   isModelLoading: boolean
-  sessionId: string | null
+  sessionId: string
 }
 
 export interface TransientState {
@@ -45,7 +45,7 @@ const homeStore = create<HomeState>()(
       chatLog: [],
       showIntroduction: process.env.NEXT_PUBLIC_SHOW_INTRODUCTION !== 'false',
       isModelLoading: false,
-      sessionId: null,
+      sessionId: crypto.randomUUID(),
       assistantMessage: '',
 
       // transient states
@@ -92,14 +92,8 @@ const homeStore = create<HomeState>()(
 homeStore.subscribe((state, prevState) => {
   if (state.chatLog !== prevState.chatLog) {
     if (state.chatLog.length === 0 && prevState.chatLog.length > 0) {
-      homeStore.setState({ sessionId: null })
+      homeStore.setState({ sessionId: crypto.randomUUID() })
     } else if (state.chatLog.length > 0) {
-      const isNewSession = !state.sessionId && !state.isCreatingSession
-
-      if (isNewSession) {
-        homeStore.setState({ isCreatingSession: true })
-      }
-
       fetch('/api/save-chat-log', {
         method: 'POST',
         headers: {
@@ -108,23 +102,11 @@ homeStore.subscribe((state, prevState) => {
         body: JSON.stringify({
           messages: state.chatLog,
           sessionId: state.sessionId,
-          isNewFile: isNewSession,
         }),
       })
         .then((response) => response.json())
-        .then((data) => {
-          if (isNewSession && data.sessionId) {
-            homeStore.setState({
-              sessionId: data.sessionId,
-              isCreatingSession: false,
-            })
-          }
-        })
         .catch((error) => {
           console.error('Error saving chat log:', error)
-          if (isNewSession) {
-            homeStore.setState({ isCreatingSession: false })
-          }
         })
     }
   }

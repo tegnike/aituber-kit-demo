@@ -24,9 +24,8 @@ export default async function handler(req: Request): Promise<Response> {
   }
 
   try {
-    const { messages, sessionId, isNewFile } = await req.json()
+    const { messages, sessionId } = await req.json()
     const created_at = new Date().toISOString()
-    let currentSessionId = sessionId
 
     // メッセージ内の画像データを省略
     const processedMessages = messages.map((msg: any) => {
@@ -47,60 +46,32 @@ export default async function handler(req: Request): Promise<Response> {
       return msg
     })
 
-    // TODO: 標準化する
     if (supabase) {
-      // セッションIDが指定されている場合、存在確認を行う
-      if (currentSessionId) {
-        const { data: existingSession } = await supabase
-          .from('public_chat_sessions')
-          .select('id')
-          .eq('id', currentSessionId)
-          .single()
-
-        // セッションが存在しない場合は新規作成
-        if (!existingSession) {
-          const sessionTitle = `Session_${crypto.randomUUID()}`
-          const { data: newSession, error: sessionError } = await supabase
-            .from('public_chat_sessions')
-            .insert({
-              id: currentSessionId, // 既存のIDを使用
-              title: sessionTitle,
-              created_at: created_at,
-              updated_at: created_at,
-            })
-            .select()
-            .single()
-
-          if (sessionError) throw sessionError
-        }
-      } else {
-        // セッションIDがない場合は新規作成（既存のコード）
-        const sessionTitle = `Session_${crypto.randomUUID()}`
-        // 新しいセッションを作成
-        const { data: newSession, error: sessionError } = await supabase
-          .from('public_chat_sessions')
-          .insert({
-            title: sessionTitle,
+      // セッションが存在しない場合のみ作成（UPSERTを使用）
+      const { error: sessionError } = await supabase
+        .from('public_chat_sessions')
+        .upsert(
+          {
+            id: sessionId,
+            title: '', // 空文字列として保存
             created_at: created_at,
             updated_at: created_at,
-          })
-          .select()
-          .single()
+          },
+          { onConflict: 'id' }
+        )
 
-        if (sessionError) throw sessionError
-        currentSessionId = newSession.id
-      }
+      if (sessionError) throw sessionError
 
       // 既存のセッションの場合はupdated_atを更新
       await supabase
         .from('public_chat_sessions')
         .update({ updated_at: created_at })
-        .eq('id', currentSessionId)
+        .eq('id', sessionId)
 
-      // 最新のメッセージのみを保存
+      // 最新のメッセージの保存
       const lastMessage = processedMessages[processedMessages.length - 1]
       const messageToSave = {
-        session_id: currentSessionId,
+        session_id: sessionId,
         role: lastMessage.role,
         content: Array.isArray(lastMessage.content)
           ? JSON.stringify(lastMessage.content)
@@ -115,18 +86,12 @@ export default async function handler(req: Request): Promise<Response> {
       if (messageError) throw messageError
     }
 
-    return new Response(
-      JSON.stringify({
-        message: 'Log saved successfully',
-        sessionId: currentSessionId, // 新しく作成したセッションIDを返す
-      }),
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    )
+    return new Response(JSON.stringify({ message: 'Log saved successfully' }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
   } catch (error) {
     console.error('Error saving chat log:', error)
     return new Response(JSON.stringify({ message: 'Error saving chat log' }), {
