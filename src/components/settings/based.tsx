@@ -76,25 +76,25 @@ const Live2DSettingsForm = () => {
   const [currentModel, setCurrentModel] = useState<Live2DModel | null>(null)
   const [openDropdown, setOpenDropdown] = useState<EmotionFieldKey | null>(null)
 
-  useEffect(() => {
-    // 現在選択されているLive2Dモデルの情報を取得
-    const fetchCurrentModel = async () => {
-      try {
-        const response = await fetch('/api/get-live2d-list')
-        const models: Live2DModel[] = await response.json()
-        const selected = models.find(
-          (model) => model.path === store.selectedLive2DPath
-        )
-        setCurrentModel(selected || null)
-      } catch (error) {
-        console.error('Error fetching Live2D model info:', error)
-      }
-    }
+  // useEffect(() => {
+  //   // 現在選択されているLive2Dモデルの情報を取得
+  //   const fetchCurrentModel = async () => {
+  //     try {
+  //       const response = await fetch('/api/get-live2d-list')
+  //       const models: Live2DModel[] = await response.json()
+  //       const selected = models.find(
+  //         (model) => model.path === store.selectedLive2DPath
+  //       )
+  //       setCurrentModel(selected || null)
+  //     } catch (error) {
+  //       console.error('Error fetching Live2D model info:', error)
+  //     }
+  //   }
 
-    if (store.selectedLive2DPath) {
-      fetchCurrentModel()
-    }
-  }, [store.selectedLive2DPath])
+  //   if (store.selectedLive2DPath) {
+  //     fetchCurrentModel()
+  //   }
+  // }, [store.selectedLive2DPath])
 
   // コンポーネントマウント時にデフォルト値を設定
   useEffect(() => {
@@ -141,7 +141,7 @@ const Live2DSettingsForm = () => {
   if (!currentModel) {
     return (
       <div className="flex items-center justify-center h-32 text-gray-500">
-        {t('Live2D.LoadingModel')}
+        {/* {t('Live2D.LoadingModel')} */}
       </div>
     )
   }

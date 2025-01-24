@@ -1,6 +1,13 @@
 import { create } from 'zustand'
 
-type SettingsTabKey = 'general' | 'ai' | 'youtube' | 'voice' | 'slide' | 'other'
+type SettingsTabKey =
+  | 'description'
+  | 'general'
+  | 'ai'
+  | 'youtube'
+  | 'voice'
+  | 'slide'
+  | 'other'
 
 interface MenuState {
   showWebcam: boolean
