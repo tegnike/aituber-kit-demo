@@ -1,4 +1,5 @@
 {
+  "Description": "■ 關於應用程式",
   "Settings": "■ 設定",
   "AISettings": "■ AI 設定",
   "YoutubeSettings": "■ YouTube 設定",
@@ -103,6 +104,7 @@
   "AnswerGenerating": "正在生成回答",
   "AboutThisApplication": "關於這個應用程式",
   "AboutThisApplicationDescription": "此應用程式是使用 AITuberKit 建立的。由於 AITuberKit 的規格，在瀏覽器中輸入的 API 金鑰會被傳送到伺服器，因此基於安全考量，某些功能無法使用。如果您有興趣，歡迎從下方的儲存庫複製並試用。",
+  "AboutThisApplicationDescription2": "⚠ 這個應用程式會將會話記錄保存到伺服器。記錄可能會經過部分加工後公開。",
   "TechnologyIntroduction": "技術介紹",
   "TechnologyIntroductionDescription1": "這個應用程式是基於 pixiv 公司的 <b>ChatVRM</b> 改造而成。原始程式碼請參考",
   "TechnologyIntroductionLink1": "這裡",
@@ -118,7 +120,7 @@
   "RepositoryURL": "倉庫 URL：",
   "DontShowIntroductionNextTime": "下次不再顯示此對話方塊",
   "Close": "關閉",
-  "TechnologyIntroductionDescription": "此應用程式使用以下技術：\n- LLM: OpenAI gpt-4o (Dify)\n- TTS: NijiVoice (voice. Miria Hosenji)\n- 3D 模型: VRM",
+  "TechnologyIntroductionDescription": "此應用程式使用以下技術：\n- LLM: Google Gemini (gemini-1.5-flash-latest)\n- TTS: NijiVoice (voice. Miria Hosenji)",
   "Contact": "聯絡我們",
   "ContactDescription": "關於此應用程式的諮詢，請透過以下電子郵件或 Twitter 帳號聯絡我們。",
   "Creator": "創作者資訊",

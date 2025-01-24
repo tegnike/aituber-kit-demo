@@ -1,4 +1,5 @@
 {
+  "Description": "■ About App",
   "Settings": "■ Settings",
   "AISettings": "■ AI Settings",
   "YoutubeSettings": "■ YouTube Settings",
@@ -103,6 +104,7 @@
   "AnswerGenerating": "Answer Generating",
   "AboutThisApplication": "About This Application",
   "AboutThisApplicationDescription": "This app was created using AITuberKit. Due to the AITuberKit specification, the API key entered in the browser is sent to the server, so some features are not available due to security concerns. If you are interested, please feel free to clone and try it out from the repository below.",
+  "AboutThisApplicationDescription2": "⚠ This app logs conversations to the server. The logs may be published with some processing.",
   "TechnologyIntroduction": "Technology Introduction",
   "TechnologyIntroductionDescription1": "This app was created by modifying pixiv's <b>ChatVRM</b>. The original source code can be found",
   "TechnologyIntroductionLink1": "here",
@@ -118,7 +120,7 @@
   "RepositoryURL": "Repository URL:",
   "DontShowIntroductionNextTime": "Do not show this dialog next time",
   "Close": "CLOSE",
-  "TechnologyIntroductionDescription": "This app uses the following technologies:\n- LLM: OpenAI gpt-4o (Dify)\n- TTS: NijiVoice (voice. Miria Hosenji)\n- 3D Model: VRM",
+  "TechnologyIntroductionDescription": "This app uses the following technologies:\n- LLM: Google Gemini (gemini-1.5-flash-latest)\n- TTS: NijiVoice (voice. Miria Hosenji)",
   "Contact": "Contact",
   "ContactDescription": "For inquiries about this app, please contact us via the email address or Twitter account below.",
   "Creator": "Creator Information",

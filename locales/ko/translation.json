@@ -1,4 +1,5 @@
 {
+  "Description": "■ 앱에 대해",
   "Settings": "■ 설정",
   "AISettings": "■ AI 설정",
   "YoutubeSettings": "■ YouTube 설정",
@@ -102,6 +103,7 @@
   "AnswerGenerating": "답변 생성중",
   "AboutThisApplication": "이 애플리케이션에 대해",
   "AboutThisApplicationDescription": "이 애플리케이션은 AITuberKit을 사용하여 만들어졌습니다. AITuberKit의 스펙에 따라 브라우저에 입력한 API 키가 서버로 전송되기 때문에, 보안 문제로 인해 일부 기능이 사용할 수 없습니다. 관심이 있으시다면 아래 리포지토리에서 자유롭게 변경 및 개조하여 사용해 보십시오.",
+  "AboutThisApplicationDescription2": "⚠ 이 애플리케이션에서는 대화 로그가 서버에 저장됩니다. 로그는 일부 가공되어 공개될 수 있습니다.",
   "TechnologyIntroduction": "기술 소개",
   "TechnologyIntroductionDescription1": "이 애플리케이션은 pixiv사의<b>ChatVRM</b>을 개조하여 만들어졌습니다. 원본 소스 코드는",
   "TechnologyIntroductionLink1": "여기",
@@ -117,7 +119,7 @@
   "RepositoryURL": "리포지토리 URL:",
   "DontShowIntroductionNextTime": "다음에 이 대화 상자를 표시하지 않기",
   "Close": "닫기",
-  "TechnologyIntroductionDescription": "이 앱은 다음과 같은 기술을 사용합니다:\n- LLM: OpenAI gpt-4o (Dify)\n- TTS: NijiVoice (voice. Miria Hosenji)\n- 3D 모델: VRM",
+  "TechnologyIntroductionDescription": "이 앱은 다음과 같은 기술을 사용합니다:\n- LLM: Google Gemini (gemini-1.5-flash-latest)\n- TTS: NijiVoice (voice. Miria Hosenji)",
   "Contact": "문의하기",
   "ContactDescription": "이 앱에 대한 문의는 아래 이메일 주소나 트위터 계정으로 연락해 주세요.",
   "Creator": "제작자 정보",
