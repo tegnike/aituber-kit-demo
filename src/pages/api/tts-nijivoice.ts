@@ -1,29 +1,35 @@
-import { NextRequest } from 'next/server'
-
 export const config = {
   runtime: 'edge',
 }
 
-export default async function handler(req: NextRequest) {
+export default async function handler(req: Request) {
   if (req.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
       status: 405,
-    })
-  }
-
-  const { script, speed, voiceActorId, apiKey, emotionalLevel, soundDuration } =
-    await req.json()
-
-  const nijivoiceApiKey = apiKey || process.env.NIJIVOICE_API_KEY
-  if (!nijivoiceApiKey) {
-    return new Response(JSON.stringify({ error: 'API key is required' }), {
-      status: 400,
+      headers: { 'Content-Type': 'application/json' },
     })
   }
 
   try {
+    const {
+      script,
+      speed,
+      voiceActorId,
+      apiKey,
+      emotionalLevel,
+      soundDuration,
+    } = await req.json()
+
+    const nijivoiceApiKey = apiKey || process.env.NIJIVOICE_API_KEY
+    if (!nijivoiceApiKey) {
+      return new Response(JSON.stringify({ error: 'API key is required' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
+
     const response = await fetch(
-      `https://api.nijivoice.com/api/platform/v1/voice-actors/${voiceActorId}/generate-voice`,
+      `https://api.nijivoice.com/api/platform/v1/voice-actors/${voiceActorId}/generate-encoded-voice`,
       {
         method: 'POST',
         headers: {
@@ -33,7 +39,7 @@ export default async function handler(req: NextRequest) {
         body: JSON.stringify({
           script,
           speed: speed.toString(),
-          format: 'wav',
+          format: 'mp3',
           emotionalLevel: emotionalLevel.toString(),
           soundDuration: soundDuration.toString(),
         }),
@@ -45,22 +51,20 @@ export default async function handler(req: NextRequest) {
     }
 
     const data = await response.json()
-    const audioUrl = data.generatedVoice.audioFileUrl
+    const base64Audio = data.generatedVoice.base64Audio
+    const audioBuffer = Buffer.from(base64Audio, 'base64')
 
-    const audioResponse = await fetch(audioUrl)
-    if (!audioResponse.ok) {
-      throw new Error('Failed to fetch audio file')
-    }
-
-    return new Response(audioResponse.body, {
+    return new Response(audioBuffer, {
       headers: {
         'Content-Type': 'audio/mpeg',
+        'Content-Length': audioBuffer.length.toString(),
       },
     })
   } catch (error) {
     console.error('Error in Nijivoice TTS:', error)
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
+      headers: { 'Content-Type': 'application/json' },
     })
   }
 }

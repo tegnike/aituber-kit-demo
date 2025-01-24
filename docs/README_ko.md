@@ -23,11 +23,21 @@
    <a href="https://github.com/sponsors/tegnike"><img alt="GitHub Sponsor" src="https://img.shields.io/badge/Sponsor-GitHub-ea4aaa?style=flat&logo=github"/></a>
 </p>
 
+<div align="center">
+   <h3>
+      🌟 <a href="https://aituberkit.com">Demo Site</a> 🌟
+   </h3>
+</div>
+
 <h3 align="center">
    <a href="../README.md">【일본어】</a>｜
    <a href="./README_en.md">【영어】</a>｜
    <a href="./README_zh.md">【중국어】</a>
 </h3>
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=tegnike/aituber-kit&type=Date)](https://star-history.com/#tegnike/aituber-kit&Date)
 
 ## 개요
 
@@ -231,6 +241,8 @@ cp .env.example .env
 여러분의 지원은 AITuber 키트의 개발과 개선에 크게 기여합니다.
 
 [![GitHub Sponsor](https://img.shields.io/badge/Sponsor-GitHub-ea4aaa?style=for-the-badge&logo=github)](https://github.com/sponsors/tegnike)
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/fdanv1k6iz)
 
 ### 협력자 여러분 (지원해 주신 순서)
 

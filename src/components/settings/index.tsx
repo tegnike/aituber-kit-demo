@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import menuStore from '@/features/stores/menu'
 
 import { CreatorLink } from '../creatorLink'
 import { IconButton } from '../iconButton'
@@ -51,7 +52,10 @@ type TabKey =
 
 const Main = () => {
   const { t } = useTranslation()
-  const [activeTab, setActiveTab] = useState<TabKey>('description')
+  const activeTab = menuStore((state) => state.activeSettingsTab)
+  const setActiveTab = (tab: TabKey) => {
+    menuStore.setState({ activeSettingsTab: tab })
+  }
 
   const tabs: { key: TabKey; label: string }[] = [
     {
@@ -139,7 +143,7 @@ const Main = () => {
 const Footer = () => {
   return (
     <footer className="absolute py-4 bg-[#413D43] text-center text-white font-Montserrat bottom-0 w-full">
-      powered by ChatVRM from Pixiv / ver. 2.21.0
+      powered by ChatVRM from Pixiv / ver. 2.24.0
     </footer>
   )
 }

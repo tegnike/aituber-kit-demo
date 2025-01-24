@@ -23,11 +23,21 @@
    <a href="https://github.com/sponsors/tegnike"><img alt="GitHub Sponsor" src="https://img.shields.io/badge/Sponsor-GitHub-ea4aaa?style=flat&logo=github"/></a>
 </p>
 
+<div align="center">
+   <h3>
+      🌟 <a href="https://aituberkit.com">Demo Site</a> 🌟
+   </h3>
+</div>
+
 <h3 align="center">
    <a href="../README.md">【Japanese】</a>｜
    <a href="./README_zh.md">【Chinese】</a>｜
    <a href="./README_ko.md">【Korean】</a>
 </h3>
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=tegnike/aituber-kit&type=Date)](https://star-history.com/#tegnike/aituber-kit&Date)
 
 ## Overview
 
@@ -235,6 +245,8 @@ We are seeking sponsors to continue our development efforts.<br>
 Your support will greatly contribute to the development and improvement of the AITuber Kit.
 
 [![GitHub Sponsor](https://img.shields.io/badge/Sponsor-GitHub-ea4aaa?style=for-the-badge&logo=github)](https://github.com/sponsors/tegnike)
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/fdanv1k6iz)
 
 ### Our Supporters (in order of support)
 

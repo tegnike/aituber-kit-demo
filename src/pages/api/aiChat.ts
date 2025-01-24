@@ -1,7 +1,3 @@
-export const config = {
-  runtime: 'edge',
-}
-
 // import { Message } from '@/features/messages/messages'
 // import { createOpenAI } from '@ai-sdk/openai'
 // import { createAnthropic } from '@ai-sdk/anthropic'
@@ -9,6 +5,7 @@ export const config = {
 // import { createCohere } from '@ai-sdk/cohere'
 // import { createMistral } from '@ai-sdk/mistral'
 // import { createAzure } from '@ai-sdk/azure'
+// import { createDeepSeek } from '@ai-sdk/deepseek'
 // import { streamText, generateText, CoreMessage } from 'ai'
 // import { NextRequest } from 'next/server'
 
@@ -22,14 +19,15 @@ export const config = {
 //   | 'mistralai'
 //   | 'perplexity'
 //   | 'fireworks'
+//   | 'deepseek'
 // type AIServiceConfig = Record<AIServiceKey, () => any>
 
 // // Allow streaming responses up to 30 seconds
 // export const maxDuration = 30
 
-// export const config = {
-//   runtime: 'edge',
-// }
+export const config = {
+  runtime: 'edge',
+}
 
 // export default async function handler(req: NextRequest) {
 //   if (req.method !== 'POST') {
@@ -45,8 +43,16 @@ export const config = {
 //     )
 //   }
 
-//   const { messages, apiKey, aiService, model, azureEndpoint, stream } =
-//     await req.json()
+//   const {
+//     messages,
+//     apiKey,
+//     aiService,
+//     model,
+//     azureEndpoint,
+//     stream,
+//     useSearchGrounding,
+//     temperature = 1.0,
+//   } = await req.json()
 
 //   let aiApiKey = apiKey
 //   if (!aiApiKey) {
@@ -113,6 +119,7 @@ export const config = {
 //         baseURL: 'https://api.fireworks.ai/inference/v1',
 //         apiKey: aiApiKey,
 //       }),
+//     deepseek: () => createDeepSeek({ apiKey: aiApiKey }),
 //   }
 //   const aiServiceInstance = aiServiceConfig[aiService as AIServiceKey]
 
@@ -130,13 +137,17 @@ export const config = {
 //   }
 
 //   const instance = aiServiceInstance()
-//   const modifiedMessages: Message[] = modifyMessages(aiService, messages)
+//   const modifiedMessages: Message[] = modifyMessages(aiService, model, messages)
+//   const isUseSearchGrounding = aiService === 'google' && useSearchGrounding
+//   const options = isUseSearchGrounding ? { useSearchGrounding: true } : {}
+//   console.log('options', options)
 
 //   try {
 //     if (stream) {
 //       const result = await streamText({
-//         model: instance(modifiedModel),
+//         model: instance(modifiedModel, options),
 //         messages: modifiedMessages as CoreMessage[],
+//         temperature: temperature,
 //       })
 
 //       return result.toDataStreamResponse()
@@ -167,8 +178,16 @@ export const config = {
 //   }
 // }
 
-// function modifyMessages(aiService: string, messages: Message[]): Message[] {
-//   if (aiService === 'anthropic' || aiService === 'perplexity') {
+// function modifyMessages(
+//   aiService: string,
+//   model: string,
+//   messages: Message[]
+// ): Message[] {
+//   if (
+//     aiService === 'anthropic' ||
+//     aiService === 'perplexity' ||
+//     (aiService === 'deepseek' && model === 'deepseek-reasoner')
+//   ) {
 //     return modifyAnthropicMessages(messages)
 //   }
 //   return messages
