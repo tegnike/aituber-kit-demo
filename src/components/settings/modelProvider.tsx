@@ -608,6 +608,7 @@ const ModelProvider = () => {
                 <div className="my-16 typography-20 font-bold">
                   {t('SearchGrounding')}
                 </div>
+                <div className="my-16">{t('SearchGroundingDescription')}</div>
                 <div className="my-8">
                   <TextButton
                     onClick={() => {
