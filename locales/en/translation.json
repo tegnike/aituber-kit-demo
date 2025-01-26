@@ -120,7 +120,7 @@
   "RepositoryURL": "Repository URL:",
   "DontShowIntroductionNextTime": "Do not show this dialog next time",
   "Close": "CLOSE",
-  "TechnologyIntroductionDescription": "This app uses the following technologies:\n- LLM: Google Gemini (gemini-1.5-flash-latest)\n- TTS: NijiVoice (voice. Miria Hosenji)",
+  "TechnologyIntroductionDescription": "This app uses the following technologies:\n- LLM: Google Gemini (gemini-1.5-flash-latest)\n- TTS: Style-Bert-VITS2(merged model)\n　- Tsukuyomi-chan (https://tyc.rei-yumesaki.net/work/software/)\n　- Anneli (https://kaunista.booth.pm/items/5511064)",
   "Contact": "Contact",
   "ContactDescription": "For inquiries about this app, please contact us via the email address or Twitter account below.",
   "Creator": "Creator Information",

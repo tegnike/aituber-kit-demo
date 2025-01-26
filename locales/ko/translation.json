@@ -119,7 +119,7 @@
   "RepositoryURL": "리포지토리 URL:",
   "DontShowIntroductionNextTime": "다음에 이 대화 상자를 표시하지 않기",
   "Close": "닫기",
-  "TechnologyIntroductionDescription": "이 앱은 다음과 같은 기술을 사용합니다:\n- LLM: Google Gemini (gemini-1.5-flash-latest)\n- TTS: NijiVoice (voice. Miria Hosenji)",
+  "TechnologyIntroductionDescription": "이 앱은 다음과 같은 기술을 사용합니다:\n- LLM: Google Gemini (gemini-1.5-flash-latest)\n- TTS: Style-Bert-VITS2(merged model)\n　- Tsukuyomi-chan (https://tyc.rei-yumesaki.net/work/software/)\n　- Anneli (https://kaunista.booth.pm/items/5511064)",
   "Contact": "문의하기",
   "ContactDescription": "이 앱에 대한 문의는 아래 이메일 주소나 트위터 계정으로 연락해 주세요.",
   "Creator": "제작자 정보",
