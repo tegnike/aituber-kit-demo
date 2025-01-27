@@ -27,8 +27,14 @@ const toastStore = create<ToastState>((set, get) => ({
     }
 
     const id = Math.random().toString(36).substring(2, 11)
+    const message =
+      toast.type === 'error'
+        ? `${toast.message}\n何度も発生する場合は 設定 > その他 > 設定をリセットする を実行してください。`
+        : toast.message
+    const duration = toast.type === 'error' ? 100000 : toast.duration
+
     set((state) => ({
-      toasts: [...state.toasts, { ...toast, id }],
+      toasts: [...state.toasts, { ...toast, id, message, duration }],
     }))
     return id
   },
