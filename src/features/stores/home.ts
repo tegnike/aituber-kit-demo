@@ -45,7 +45,10 @@ const homeStore = create<HomeState>()(
       chatLog: [],
       showIntroduction: process.env.NEXT_PUBLIC_SHOW_INTRODUCTION !== 'false',
       isModelLoading: false,
-      sessionId: crypto.randomUUID(),
+      sessionId:
+        typeof window !== 'undefined'
+          ? localStorage.getItem('current-session-id') || crypto.randomUUID()
+          : crypto.randomUUID(),
       assistantMessage: '',
 
       // transient states
@@ -84,6 +87,19 @@ const homeStore = create<HomeState>()(
         showIntroduction,
         sessionId,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (!state) return
+        // セッションIDが存在しない場合のみ新規生成
+        if (!state.sessionId) {
+          const newSessionId = crypto.randomUUID()
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('current-session-id', newSessionId)
+          }
+          state.sessionId = newSessionId
+        } else if (typeof window !== 'undefined') {
+          localStorage.setItem('current-session-id', state.sessionId)
+        }
+      },
     }
   )
 )
@@ -92,7 +108,11 @@ const homeStore = create<HomeState>()(
 homeStore.subscribe((state, prevState) => {
   if (state.chatLog !== prevState.chatLog) {
     if (state.chatLog.length === 0 && prevState.chatLog.length > 0) {
-      homeStore.setState({ sessionId: crypto.randomUUID() })
+      const newSessionId = crypto.randomUUID()
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('current-session-id', newSessionId)
+      }
+      homeStore.setState({ sessionId: newSessionId })
     } else if (state.chatLog.length > 0) {
       fetch('/api/save-chat-log', {
         method: 'POST',
