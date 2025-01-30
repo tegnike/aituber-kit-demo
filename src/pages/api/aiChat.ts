@@ -25,6 +25,39 @@ type AIServiceConfig = Record<AIServiceKey, () => any>
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30
 
+// 質問判定用のシステムプロンプト
+const QUESTION_DETECTION_PROMPT = `あなたは入力されたテキストが質問であるかどうかを判定するアシスタントです。
+以下の基準で判定してください：
+- 疑問符や「か」「ですか」などの疑問の終助詞を含む
+- 「教えて」「どう」「なぜ」などの質問を示す表現を含む
+- 情報や説明を求める内容である
+
+判定結果は "true" または "false" のみを返してください。`
+
+// 質問であるかを判定する関数
+async function isQuestion(
+  instance: any,
+  model: string,
+  lastMessage: Message
+): Promise<boolean> {
+  try {
+    const detectionMessages: CoreMessage[] = [
+      { role: 'system', content: QUESTION_DETECTION_PROMPT },
+      { role: 'user', content: lastMessage.content as string },
+    ]
+
+    const result = await generateText({
+      model: instance(model),
+      messages: detectionMessages,
+    })
+
+    return result.text.toLowerCase().includes('true')
+  } catch (error) {
+    console.error('Error in question detection:', error)
+    return false
+  }
+}
+
 export const config = {
   runtime: 'edge',
 }
@@ -124,10 +157,25 @@ export default async function handler(req: NextRequest) {
 
   const instance = aiServiceInstance()
   const modifiedMessages: Message[] = modifyMessages(aiService, model, messages)
-  const isUseSearchGrounding =
+  let isUseSearchGrounding =
     aiService === 'google' &&
     useSearchGrounding &&
     modifiedMessages.every((msg) => typeof msg.content === 'string')
+
+  if (isUseSearchGrounding) {
+    // 質問判定の実行（最後のユーザーメッセージを使用）
+    const lastUserMessage = modifiedMessages
+      .slice()
+      .reverse()
+      .find((msg) => msg.role === 'user')
+
+    const questionDetectionResult = lastUserMessage
+      ? await isQuestion(instance, modifiedModel, lastUserMessage)
+      : false
+
+    isUseSearchGrounding = questionDetectionResult
+  }
+
   const options = isUseSearchGrounding ? { useSearchGrounding: true } : {}
 
   try {
@@ -136,6 +184,7 @@ export default async function handler(req: NextRequest) {
         model: instance(modifiedModel, options),
         messages: modifiedMessages as CoreMessage[],
         temperature: temperature,
+        maxTokens: 200,
       })
 
       return result.toDataStreamResponse()
