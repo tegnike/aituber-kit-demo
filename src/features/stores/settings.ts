@@ -326,8 +326,7 @@ const settingsStore = create<SettingsState>()(
         0.1,
 
       // Settings
-      modelType:
-        (process.env.NEXT_PUBLIC_MODEL_TYPE as 'vrm' | 'live2d') || 'vrm',
+      modelType: 'vrm',
 
       // Live2D settings
       neutralEmotions:
@@ -422,7 +421,7 @@ const settingsStore = create<SettingsState>()(
         nijivoiceSpeed: state.nijivoiceSpeed,
         nijivoiceEmotionalLevel: state.nijivoiceEmotionalLevel,
         nijivoiceSoundDuration: state.nijivoiceSoundDuration,
-        modelType: state.modelType,
+        modelType: 'vrm',
         neutralEmotions: state.neutralEmotions,
         happyEmotions: state.happyEmotions,
         sadEmotions: state.sadEmotions,

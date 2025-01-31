@@ -464,16 +464,6 @@ const Based = () => {
           >
             VRM
           </button>
-          <button
-            className={`px-16 py-8 rounded-8 ${
-              modelType === 'live2d'
-                ? 'bg-primary text-white'
-                : 'bg-surface1 hover:bg-surface1-hover'
-            }`}
-            onClick={() => settingsStore.setState({ modelType: 'live2d' })}
-          >
-            Live2D
-          </button>
         </div>
 
         {modelType === 'vrm' ? (
