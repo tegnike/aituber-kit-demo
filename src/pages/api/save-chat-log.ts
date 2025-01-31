@@ -76,7 +76,6 @@ export default async function handler(req: Request): Promise<Response> {
         content: Array.isArray(lastMessage.content)
           ? JSON.stringify(lastMessage.content)
           : lastMessage.content,
-        created_at: created_at,
       }
 
       const { error: messageError } = await supabase
