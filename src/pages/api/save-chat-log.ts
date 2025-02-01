@@ -55,18 +55,11 @@ export default async function handler(req: Request): Promise<Response> {
             id: sessionId,
             title: '', // 空文字列として保存
             created_at: created_at,
-            updated_at: created_at,
           },
           { onConflict: 'id' }
         )
 
       if (sessionError) throw sessionError
-
-      // 既存のセッションの場合はupdated_atを更新
-      await supabase
-        .from('public_chat_sessions')
-        .update({ updated_at: created_at })
-        .eq('id', sessionId)
 
       // 最新のメッセージの保存
       const lastMessage = processedMessages[processedMessages.length - 1]
