@@ -47,19 +47,34 @@ export default async function handler(req: Request): Promise<Response> {
     })
 
     if (supabase) {
-      // セッションが存在しない場合のみ作成（UPSERTを使用）
-      const { error: sessionError } = await supabase
+      // まず既存セッションの確認
+      const { data: existingSession } = await supabase
         .from('public_chat_sessions')
-        .upsert(
-          {
-            id: sessionId,
-            title: '', // 空文字列として保存
-            created_at: created_at,
-          },
-          { onConflict: 'id' }
-        )
+        .select('id')
+        .eq('id', sessionId)
+        .single()
 
-      if (sessionError) throw sessionError
+      // 既存セッションがある場合は updated_at のみ更新
+      if (existingSession) {
+        const { error: sessionError } = await supabase
+          .from('public_chat_sessions')
+          .update({ updated_at: created_at })
+          .eq('id', sessionId)
+
+        if (sessionError) throw sessionError
+      } else {
+        // 新規セッションの場合は created_at も含めて作成
+        const { error: sessionError } = await supabase
+          .from('public_chat_sessions')
+          .insert({
+            id: sessionId,
+            title: '',
+            created_at: created_at,
+            updated_at: created_at,
+          })
+
+        if (sessionError) throw sessionError
+      }
 
       // 最新のメッセージの保存
       const lastMessage = processedMessages[processedMessages.length - 1]
