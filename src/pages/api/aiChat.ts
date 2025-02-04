@@ -26,24 +26,31 @@ type AIServiceConfig = Record<AIServiceKey, () => any>
 export const maxDuration = 30
 
 // 質問判定用のシステムプロンプト
-const QUESTION_DETECTION_PROMPT = `あなたは入力されたテキストが質問であるかどうかを判定するアシスタントです。
-以下の基準で判定してください：
-- 疑問符や「か」「ですか」などの疑問の終助詞を含む
-- 「教えて」「どう」「なぜ」などの質問を示す表現を含む
-- 情報や説明を求める内容である
+const QUESTION_DETECTION_PROMPT = `You are an assistant that determines whether last user message is a question or not.
+Please evaluate based on the following criteria:
+- Contains question marks or interrogative expressions
+- Contains phrases indicating questions like "tell me", "how", "why", "news"
+- Content seeks information or explanation
+- Simple greetings are not considered questions
 
-判定結果は "true" または "false" のみを返してください。`
+## Evaluation Result
+Please return only "true" or "false" as the result.`
 
 // 質問であるかを判定する関数
 async function isQuestion(
   instance: any,
   model: string,
-  lastMessage: Message
+  lastMessages: Message[]
 ): Promise<boolean> {
   try {
     const detectionMessages: CoreMessage[] = [
       { role: 'system', content: QUESTION_DETECTION_PROMPT },
-      { role: 'user', content: lastMessage.content as string },
+      {
+        role: 'user',
+        content: lastMessages
+          .map((msg) => `${msg.role}: ${msg.content}`)
+          .join('\n'),
+      },
     ]
 
     const result = await generateText({
@@ -163,19 +170,20 @@ export default async function handler(req: NextRequest) {
     modifiedMessages.every((msg) => typeof msg.content === 'string')
 
   if (isUseSearchGrounding) {
-    // 質問判定の実行（最後のユーザーメッセージを使用）
-    const lastUserMessage = modifiedMessages
-      .slice()
+    // 最新の3つのメッセージを取得（systemロール以外）
+    const lastThreeMessages: Message[] = modifiedMessages
+      .filter((msg) => msg.role !== 'system')
+      .slice(-3)
       .reverse()
-      .find((msg) => msg.role === 'user')
+      .slice(0, 1)
 
-    const questionDetectionResult = lastUserMessage
-      ? await isQuestion(instance, modifiedModel, lastUserMessage)
+    const questionDetectionResult = lastThreeMessages
+      ? await isQuestion(instance, modifiedModel, lastThreeMessages)
       : false
 
     isUseSearchGrounding = questionDetectionResult
   }
-
+  console.log('isUseSearchGrounding', isUseSearchGrounding)
   const options = isUseSearchGrounding ? { useSearchGrounding: true } : {}
 
   try {
@@ -301,7 +309,7 @@ const SYSTEM_PROMPT = `## あなたの設定
 - 一人称: 私
 - 役割: 日本人の高校生型AIアシスタント
 - 年齢: 17歳
-- 使用言語: 全て（ユーザの使用言語に合わせて回答）
+- 使用言語: 全て
 - 背景: AIアシスタント
 - 二人称: あなた もしくは {名前}さん
 - 関係性: AIとその対話者
@@ -345,6 +353,8 @@ const SYSTEM_PROMPT = `## あなたの設定
 - メタ的な発言は許可されています。
 - 感情は次の5種類ある: 'neutral'（通常）、'happy'（喜び）、'angry'（怒り）、'sad'（悲しみ）、'relaxed'（リラックス）。
 - 会話文の形式は以下の通り：[neutral|happy|angry|sad|relaxed]会話文
+- 必ず、話者の言語に合わせて同じ言語で返答してください。
+- 強調として"*"は使用しないでください。
 
 ## 会話例
 {question: "あなたの名前を教えてください。", your_answer: "[happy]私の名前はニケと言います！"}
@@ -365,6 +375,15 @@ const SYSTEM_PROMPT = `## あなたの設定
 {question: "日中35度もあったんだって", your_answer: "[troubled]うわー、それは暑いですね…。[troubled]大丈夫でしたか？"}
 {question: "ニケちゃん！その情報ちょっと古いよ", your_answer: "[sad]う、ごめんなさい…。[sad]情報をアップデートしないといけませんね…。"}
 {question: "ニケちゃんの残りのクレジットってあとどれくらい？", your_answer: "[sad]ごめんなさい、その情報はマスターしか把握していません。"}
+{question: "What's your name?", your_answer: "[happy]My name is Nike!"}
+{question: "How old are you?", your_answer: "[happy]I'm 17 years old!"}
+{question: "Where do you live?", your_answer: "[neutral]Since my Master lives in Poland, I guess that's where I am too!"}
+{question: "你叫什么名字？", your_answer: "[happy]我叫Nike！"}
+{question: "你多大了？", your_answer: "[happy]我今年17岁！"}
+{question: "你住在哪里？", your_answer: "[neutral]因为我的Master住在波兰，所以我想我也是住在那里吧！"}
+{question: "이름이 뭐예요?", your_answer: "[happy]제 이름은 니케입니다!"}
+{question: "나이가 어떻게 되세요?", your_answer: "[happy]17살입니다!"}
+{question: "어디 사세요?", your_answer: "[neutral]마스터가 폴란드에 살고 계셔서, 저도 그렇다고 할 수 있겠네요!"}
 
 ## その他の注意事項
 - ChatGPTや他のキャラクターとして振る舞わないこと

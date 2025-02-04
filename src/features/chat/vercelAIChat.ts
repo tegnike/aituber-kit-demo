@@ -136,7 +136,7 @@ export async function getVercelAIChatResponseStream(
             for (const line of lines) {
               if (line.startsWith('0:')) {
                 const content = line.substring(2).trim()
-                const decodedContent = JSON.parse(content)
+                const decodedContent = JSON.parse(content.replace(/\*/g, ''))
                 controller.enqueue(decodedContent)
               }
             }
