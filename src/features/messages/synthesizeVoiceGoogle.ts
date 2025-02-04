@@ -1,5 +1,5 @@
 import { Talk } from './messages'
-import { Language } from '@/features/constants/settings'
+import { Language, VoiceLanguage } from '@/features/constants/settings'
 
 export async function synthesizeVoiceGoogleApi(
   talk: Talk,
@@ -8,11 +8,14 @@ export async function synthesizeVoiceGoogleApi(
 ) {
   try {
     const googleTtsTypeByLang = getGoogleTtsType(googleTtsType, selectLanguage)
-
+    const voiceLanguageCode = getVoiceLanguageCode(selectLanguage)
     const body = {
       message: talk.message,
       googleTtsTypeByLang,
+      voiceLanguageCode,
     }
+
+    console.log('body', body)
 
     const res = await fetch('/api/tts-google', {
       method: 'POST',
@@ -58,5 +61,22 @@ function getGoogleTtsType(
       return 'cmn-TW-Standard-A'
     default:
       return 'en-US-Neural2-F'
+  }
+}
+
+function getVoiceLanguageCode(selectLanguage: string): VoiceLanguage {
+  switch (selectLanguage) {
+    case 'ja':
+      return 'ja-JP'
+    case 'en':
+      return 'en-US'
+    case 'zh':
+      return 'zh-TW'
+    case 'zh-TW':
+      return 'zh-TW'
+    case 'ko':
+      return 'ko-KR'
+    default:
+      return 'ja-JP'
   }
 }

@@ -75,7 +75,13 @@ const createSpeakCharacter = () => {
 
       let buffer
       try {
-        if (talk.message == '' && talk.buffer) {
+        if (ss.selectLanguage !== 'ja') {
+          buffer = await synthesizeVoiceGoogleApi(
+            talk,
+            ss.googleTtsType,
+            ss.selectLanguage
+          )
+        } else if (talk.message == '' && talk.buffer) {
           buffer = talk.buffer
           isNeedDecode = false
         } else if (ss.audioMode) {

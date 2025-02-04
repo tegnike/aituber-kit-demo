@@ -191,8 +191,7 @@ const settingsStore = create<SettingsState>()(
       selectVoice:
         (process.env.NEXT_PUBLIC_SELECT_VOICE as AIVoice) || 'voicevox',
       koeiroParam: DEFAULT_PARAM,
-      googleTtsType:
-        process.env.NEXT_PUBLIC_GOOGLE_TTS_TYPE || 'en-US-Neural2-F',
+      googleTtsType: process.env.NEXT_PUBLIC_GOOGLE_TTS_TYPE || '',
       voicevoxSpeaker: process.env.NEXT_PUBLIC_VOICEVOX_SPEAKER || '46',
       voicevoxSpeed:
         parseFloat(process.env.NEXT_PUBLIC_VOICEVOX_SPEED || '1.0') || 1.0,

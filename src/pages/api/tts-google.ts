@@ -2,37 +2,64 @@ export const config = {
   runtime: 'edge',
 }
 
-// import type { NextApiRequest, NextApiResponse } from 'next'
-// import textToSpeech from '@google-cloud/text-to-speech'
-// import { google } from '@google-cloud/text-to-speech/build/protos/protos'
+export default async function handler(req: Request) {
+  try {
+    const { message, googleTtsTypeByLang, voiceLanguageCode } = await req.json()
 
-// type Data = {
-//   audio?: Uint8Array
-//   error?: string
-// }
+    const response = await fetch(
+      `https://texttospeech.googleapis.com/v1/text:synthesize?key=${process.env.GOOGLE_TTS_KEY}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          input: { text: message },
+          voice: { languageCode: voiceLanguageCode, name: googleTtsTypeByLang },
+          audioConfig: { audioEncoding: 'MP3' },
+        }),
+      }
+    )
 
-// export default async function handler(
-//   req: NextApiRequest,
-//   res: NextApiResponse<Data>
-// ) {
-//   const message = req.body.message
-//   const ttsType = req.body.ttsType
+    if (!response.ok) {
+      const error = await response.text()
+      return new Response(JSON.stringify({ error: 'Google TTS API Error' }), {
+        status: response.status,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
 
-//   try {
-//     const client = new textToSpeech.TextToSpeechClient()
+    const data = await response.json()
 
-//     const request: google.cloud.texttospeech.v1.ISynthesizeSpeechRequest = {
-//       input: { text: message },
-//       voice: { languageCode: 'ja-JP', name: ttsType },
-//       audioConfig: { audioEncoding: 'MP3' },
-//     }
+    if (!data.audioContent) {
+      throw new Error('No audio content received from Google TTS')
+    }
 
-//     const [response] = await client.synthesizeSpeech(request)
-//     const audio = response.audioContent as Uint8Array
+    // Base64デコード
+    const binaryString = atob(data.audioContent)
+    const bytes = new Uint8Array(binaryString.length)
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i)
+    }
 
-//     res.status(200).json({ audio })
-//   } catch (error) {
-//     console.error('Error in Google TTS:', error)
-//     res.status(500).json({ error: 'Internal Server Error' })
-//   }
-// }
+    // バイナリデータを数値配列として返す
+    return new Response(
+      JSON.stringify({
+        audio: {
+          data: Array.from(bytes),
+        },
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+  } catch (error) {
+    console.error('Error in Google TTS:', error)
+    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+}
