@@ -75,11 +75,14 @@ const createSpeakCharacter = () => {
 
       let buffer
       try {
-        if (ss.selectLanguage !== 'ja') {
-          buffer = await synthesizeVoiceGoogleApi(
+        if (!isJapanese(talk.message)) {
+          console.log('OpenAI TTSを使用します')
+          buffer = await synthesizeVoiceOpenAIApi(
             talk,
-            ss.googleTtsType,
-            ss.selectLanguage
+            ss.openaiTTSKey || ss.openaiKey,
+            ss.openaiTTSVoice,
+            ss.openaiTTSModel,
+            ss.openaiTTSSpeed
           )
         } else if (talk.message == '' && talk.buffer) {
           buffer = talk.buffer
@@ -278,4 +281,10 @@ export const testAivisSpeech = async () => {
       Live2DHandler.speak(buffer, talk)
     }
   }
+}
+
+function isJapanese(text: string): boolean {
+  return /^[\u3040-\u309F\u30A0-\u30FF]|[\u4E00-\u9FFF][\u3040-\u309F\u30A0-\u30FF]/.test(
+    text
+  )
 }
