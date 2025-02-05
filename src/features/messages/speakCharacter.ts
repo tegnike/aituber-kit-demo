@@ -56,13 +56,15 @@ const createSpeakCharacter = () => {
     const ss = settingsStore.getState()
     onStart?.()
 
-    const processedMessage = preprocessMessage(talk.message, ss)
-    if (!processedMessage && !talk.buffer) {
-      return
-    }
+    if (isJapanese(talk.message)) {
+      const processedMessage = preprocessMessage(talk.message, ss)
+      if (!processedMessage && !talk.buffer) {
+        return
+      }
 
-    if (processedMessage) {
-      talk.message = processedMessage
+      if (processedMessage) {
+        talk.message = processedMessage
+      }
     }
 
     let isNeedDecode = true
@@ -76,7 +78,6 @@ const createSpeakCharacter = () => {
       let buffer
       try {
         if (!isJapanese(talk.message)) {
-          console.log('OpenAI TTSを使用します')
           buffer = await synthesizeVoiceOpenAIApi(
             talk,
             ss.openaiTTSKey || ss.openaiKey,
