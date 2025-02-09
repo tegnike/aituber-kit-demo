@@ -2,13 +2,14 @@ import { create } from 'zustand'
 
 type SettingsTabKey =
   | 'description'
-  | 'general'
+  | 'based'
+  | 'character'
   | 'ai'
   | 'youtube'
   | 'voice'
   | 'slide'
+  | 'log'
   | 'other'
-
 interface MenuState {
   showWebcam: boolean
   showCapture: boolean
@@ -24,7 +25,7 @@ const menuStore = create<MenuState>((set, get) => ({
   fileInput: null,
   bgFileInput: null,
   slideVisible: true,
-  activeSettingsTab: 'general',
+  activeSettingsTab: 'description',
 }))
 
 export default menuStore

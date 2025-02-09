@@ -6,10 +6,12 @@ import { CreatorLink } from '../creatorLink'
 import { IconButton } from '../iconButton'
 import Description from './description'
 import Based from './based'
+import Character from './character'
 import AI from './ai'
 import Voice from './voice'
 import YouTube from './youtube'
 import Slide from './slide'
+import Log from './log'
 import Other from './other'
 type Props = {
   onClickClose: () => void
@@ -43,11 +45,13 @@ const Header = ({ onClickClose }: Pick<Props, 'onClickClose'>) => {
 // タブの定義
 type TabKey =
   | 'description'
-  | 'general'
+  | 'based'
+  | 'character'
   | 'ai'
-  | 'youtube'
   | 'voice'
+  | 'youtube'
   | 'slide'
+  | 'log'
   | 'other'
 
 const Main = () => {
@@ -63,8 +67,12 @@ const Main = () => {
       label: t('Description'),
     },
     {
-      key: 'general',
-      label: t('Settings'),
+      key: 'based',
+      label: t('BasedSettings'),
+    },
+    {
+      key: 'character',
+      label: t('CharacterSettings'),
     },
     {
       key: 'ai',
@@ -83,6 +91,10 @@ const Main = () => {
       label: t('SlideSettings'),
     },
     {
+      key: 'log',
+      label: t('LogSettings'),
+    },
+    {
       key: 'other',
       label: t('OtherSettings'),
     },
@@ -92,8 +104,10 @@ const Main = () => {
     switch (activeTab) {
       case 'description':
         return <Description />
-      case 'general':
+      case 'based':
         return <Based />
+      case 'character':
+        return <Character />
       case 'ai':
         return <AI />
       case 'voice':
@@ -102,6 +116,8 @@ const Main = () => {
         return <YouTube />
       case 'slide':
         return <Slide />
+      case 'log':
+        return <Log />
       case 'other':
         return <Other />
     }
@@ -143,7 +159,7 @@ const Main = () => {
 const Footer = () => {
   return (
     <footer className="absolute py-4 bg-[#413D43] text-center text-white font-Montserrat bottom-0 w-full">
-      powered by ChatVRM from Pixiv / ver. 2.24.0
+      powered by ChatVRM from Pixiv / ver. 2.26.0
     </footer>
   )
 }

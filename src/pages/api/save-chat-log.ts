@@ -24,27 +24,8 @@ export default async function handler(req: Request): Promise<Response> {
   }
 
   try {
-    const { messages, sessionId } = await req.json()
+    const { message, sessionId } = await req.json()
     const created_at = new Date().toISOString()
-
-    // メッセージ内の画像データを省略
-    const processedMessages = messages.map((msg: any) => {
-      if (msg.content && Array.isArray(msg.content)) {
-        return {
-          ...msg,
-          content: msg.content.map((content: any) => {
-            if (content.type === 'image') {
-              return {
-                type: 'image',
-                image: '[image data omitted]',
-              }
-            }
-            return content
-          }),
-        }
-      }
-      return msg
-    })
 
     if (supabase) {
       // まず既存セッションの確認
@@ -76,14 +57,14 @@ export default async function handler(req: Request): Promise<Response> {
         if (sessionError) throw sessionError
       }
 
-      // 最新のメッセージの保存
-      const lastMessage = processedMessages[processedMessages.length - 1]
+      // 最新のメッセージのみを保存
       const messageToSave = {
         session_id: sessionId,
-        role: lastMessage.role,
-        content: Array.isArray(lastMessage.content)
-          ? JSON.stringify(lastMessage.content)
-          : lastMessage.content,
+        role: message.role,
+        content: Array.isArray(message.content)
+          ? JSON.stringify(message.content)
+          : message.content,
+        created_at: created_at,
       }
 
       const { error: messageError } = await supabase

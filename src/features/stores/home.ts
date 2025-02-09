@@ -33,6 +33,7 @@ export interface TransientState {
   isLive2dLoaded: boolean
   setIsLive2dLoaded: (loaded: boolean) => void
   isCreatingSession: boolean
+  isSpeaking: boolean
 }
 
 export type HomeState = PersistedState & TransientState
@@ -79,6 +80,7 @@ const homeStore = create<HomeState>()(
       isLive2dLoaded: false,
       setIsLive2dLoaded: (loaded) => set(() => ({ isLive2dLoaded: loaded })),
       isCreatingSession: false,
+      isSpeaking: false,
     }),
     {
       name: 'aitube-kit-home',
@@ -114,13 +116,18 @@ homeStore.subscribe((state, prevState) => {
       }
       homeStore.setState({ sessionId: newSessionId })
     } else if (state.chatLog.length > 0) {
+      // 最新のメッセージを取得し、保存用に処理
+      const lastMessage = state.chatLog[state.chatLog.length - 1]
+      const processedMessage =
+        messageSelectors.sanitizeMessageForStorage(lastMessage)
+
       fetch('/api/save-chat-log', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          messages: state.chatLog,
+          message: processedMessage,
           sessionId: state.sessionId,
         }),
       })
