@@ -58,12 +58,18 @@ const createSpeakCharacter = () => {
     onStart?: () => void,
     onComplete?: () => void
   ) => {
+    const hs = homeStore.getState()
     const ss = settingsStore.getState()
     onStart?.()
 
     speakQueue.checkSessionId(sessionId)
-
-    if (isJapanese(talk.message)) {
+    const lastUserMessage = hs.chatLog.findLast((log) => log.role === 'user')
+    const isJapanseCheck =
+      isJapanese(talk.message) ||
+      (lastUserMessage?.content &&
+        typeof lastUserMessage.content === 'string' &&
+        isJapanese(lastUserMessage.content))
+    if (isJapanseCheck) {
       const processedMessage = preprocessMessage(talk.message, ss)
       if (!processedMessage && !talk.buffer) {
         return
@@ -84,7 +90,7 @@ const createSpeakCharacter = () => {
 
       let buffer
       try {
-        if (!isJapanese(talk.message)) {
+        if (!isJapanseCheck) {
           buffer = await synthesizeVoiceOpenAIApi(
             talk,
             ss.openaiTTSKey || ss.openaiKey,
