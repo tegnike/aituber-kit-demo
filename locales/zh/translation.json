@@ -107,6 +107,7 @@
   "AboutThisApplication": "關於這個應用程式",
   "AboutThisApplicationDescription": "此應用程式是使用 AITuberKit 建立的。由於 AITuberKit 的規格，在瀏覽器中輸入的 API 金鑰會被傳送到伺服器，因此基於安全考量，某些功能無法使用。如果您有興趣，歡迎從下方的儲存庫複製並試用。",
   "AboutThisApplicationDescription2": "⚠ 這個應用程式會將會話記錄保存到伺服器。記錄可能會經過部分加工後公開。",
+  "AboutThisApplicationDescription3": "此應用程式的運營費用和 LLM 使用費用均由個人負擔。如果您有興趣，歡迎考慮支持我們。",
   "TechnologyIntroduction": "技術介紹",
   "TechnologyIntroductionDescription1": "這個應用程式是基於 pixiv 公司的 <b>ChatVRM</b> 改造而成。原始程式碼請參考",
   "TechnologyIntroductionLink1": "這裡",
