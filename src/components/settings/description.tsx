@@ -21,6 +21,21 @@ const Description = () => {
           <div className="my-8 whitespace-pre-line">
             {t('AboutThisApplicationDescription2')}
           </div>
+          <div className="my-24 whitespace-pre-line">
+            {t('AboutThisApplicationDescription3')}
+            <ul className="my-8">
+              <li>
+                <a href="https://github.com/sponsors/tegnike">
+                  - Github Sponsor: https://github.com/sponsors/tegnike
+                </a>
+              </li>
+              <li>
+                <a href="https://nikechan.fanbox.cc">
+                  - FANBOX: https://nikechan.fanbox.cc
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="my-40">
           <div className="mb-16 typography-20 font-bold">
