@@ -3,9 +3,9 @@ export const config = {
 }
 
 export default async function handler(req: Request) {
-  try {
-    const { message, googleTtsTypeByLang, voiceLanguageCode } = await req.json()
+  const { message, ttsType, languageCode } = await req.json()
 
+  try {
     const response = await fetch(
       `https://texttospeech.googleapis.com/v1/text:synthesize?key=${process.env.GOOGLE_TTS_KEY}`,
       {
@@ -15,7 +15,7 @@ export default async function handler(req: Request) {
         },
         body: JSON.stringify({
           input: { text: message },
-          voice: { languageCode: voiceLanguageCode, name: googleTtsTypeByLang },
+          voice: { languageCode: languageCode, name: ttsType },
           audioConfig: { audioEncoding: 'MP3' },
         }),
       }
@@ -23,10 +23,14 @@ export default async function handler(req: Request) {
 
     if (!response.ok) {
       const error = await response.text()
-      return new Response(JSON.stringify({ error: 'Google TTS API Error' }), {
-        status: response.status,
-        headers: { 'Content-Type': 'application/json' },
-      })
+      console.error('Google TTS API Error:', error)
+      return new Response(
+        JSON.stringify({ error: 'Google TTS API Error', details: error }),
+        {
+          status: response.status,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
     }
 
     const data = await response.json()
@@ -45,9 +49,7 @@ export default async function handler(req: Request) {
     // バイナリデータを数値配列として返す
     return new Response(
       JSON.stringify({
-        audio: {
-          data: Array.from(bytes),
-        },
+        audio: data.audioContent,
       }),
       {
         headers: {
