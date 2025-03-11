@@ -58,7 +58,7 @@ export default async function handler(req: Request) {
       }
     )
   } catch (error) {
-    console.error('Error in Google TTS:', error)
+    console.error('Error in Google Text-to-Speech:', error)
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },

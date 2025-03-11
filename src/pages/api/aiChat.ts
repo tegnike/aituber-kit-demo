@@ -97,12 +97,17 @@ export default async function handler(req: NextRequest) {
     stream,
     useSearchGrounding,
     temperature = 1.0,
+    maxTokens = 4096,
   } = await req.json()
 
   let aiApiKey = apiKey
   if (!aiApiKey) {
-    const envKey = `${aiService.toUpperCase()}_KEY`
-    aiApiKey = process.env[envKey] || ''
+    // 環境変数から[サービス名]_KEY または [サービス名]_API_KEY の形式でAPIキーを取得
+    const servicePrefix = aiService.toUpperCase()
+    aiApiKey =
+      process.env[`${servicePrefix}_KEY`] ||
+      process.env[`${servicePrefix}_API_KEY`] ||
+      ''
   }
 
   if (!aiApiKey) {
@@ -200,7 +205,7 @@ export default async function handler(req: NextRequest) {
         model: instance(modifiedModel, options),
         messages: modifiedMessages as CoreMessage[],
         temperature: temperature,
-        maxTokens: 200,
+        maxTokens: maxTokens,
       })
 
       return result.toDataStreamResponse()
@@ -208,6 +213,8 @@ export default async function handler(req: NextRequest) {
       const result = await generateText({
         model: instance(model),
         messages: modifiedMessages as CoreMessage[],
+        temperature: temperature,
+        maxTokens: maxTokens,
       })
 
       return NextResponse.json({ text: result.text })
