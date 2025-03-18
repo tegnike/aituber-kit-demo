@@ -74,7 +74,7 @@ interface ModelProvider extends Live2DSettings {
   selectAIService: AIService
   selectAIModel: string
   localLlmUrl: string
-  selectVoice: AIVoice
+  get selectVoice(): AIVoice
   koeiroParam: KoeiroParam
   googleTtsType: string
   voicevoxSpeaker: string
@@ -196,8 +196,9 @@ const settingsStore = create<SettingsState>()(
         (process.env.NEXT_PUBLIC_SELECT_AI_SERVICE as AIService) || 'openai',
       selectAIModel: process.env.NEXT_PUBLIC_SELECT_AI_MODEL || 'gpt-4',
       localLlmUrl: process.env.NEXT_PUBLIC_LOCAL_LLM_URL || '',
-      selectVoice:
-        (process.env.NEXT_PUBLIC_SELECT_VOICE as AIVoice) || 'voicevox',
+      get selectVoice(): AIVoice {
+        return 'aivis_speech'
+      },
       koeiroParam: DEFAULT_PARAM,
       googleTtsType: process.env.NEXT_PUBLIC_GOOGLE_TTS_TYPE || '',
       voicevoxSpeaker: process.env.NEXT_PUBLIC_VOICEVOX_SPEAKER || '46',
@@ -375,7 +376,7 @@ const settingsStore = create<SettingsState>()(
         selectAIService: state.selectAIService,
         selectAIModel: state.selectAIModel,
         localLlmUrl: state.localLlmUrl,
-        selectVoice: state.selectVoice,
+        selectVoice: 'aivis_speech',
         koeiroParam: state.koeiroParam,
         googleTtsType: state.googleTtsType,
         voicevoxSpeaker: state.voicevoxSpeaker,
