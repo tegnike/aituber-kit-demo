@@ -54,7 +54,7 @@ export default async function handler(req: NextRequest) {
           method: 'GET',
           headers: {
             'Content-Type': 'audio/wav',
-            'X-API-Token': stylebertvits2ApiKey,
+            'X-API-Key': stylebertvits2ApiKey,
           },
         }
       )
@@ -80,7 +80,7 @@ export default async function handler(req: NextRequest) {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${stylebertvits2ApiKey}`,
-            'X-API-Token': stylebertvits2ApiKey,
+            'X-API-Key': stylebertvits2ApiKey,
           },
           body: JSON.stringify({
             input: {
