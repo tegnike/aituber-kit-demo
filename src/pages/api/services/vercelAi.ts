@@ -70,7 +70,7 @@ export async function streamAiText({
 }) {
   try {
     const result = await streamText({
-      model: modelInstance(model, options),
+      model: modelInstance('gpt-4o-2024-11-20', options),
       messages: messages as CoreMessage[],
       temperature,
       maxTokens,

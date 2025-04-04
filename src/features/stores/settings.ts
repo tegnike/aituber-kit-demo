@@ -227,7 +227,7 @@ const settingsStore = create<SettingsState>()(
       // Model Provider
       selectAIService:
         (process.env.NEXT_PUBLIC_SELECT_AI_SERVICE as AIService) || 'openai',
-      selectAIModel: process.env.NEXT_PUBLIC_SELECT_AI_MODEL || 'gpt-4',
+      selectAIModel: 'gpt-4o-2024-11-20',
       localLlmUrl: process.env.NEXT_PUBLIC_LOCAL_LLM_URL || '',
       get selectVoice(): AIVoice {
         return 'aivis_speech'
