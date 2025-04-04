@@ -16,8 +16,9 @@ export default async function handler(req: Request) {
     const body = await req.json()
     console.log('Request body:', body)
 
-    const { message, voice, model, speed, apiKey } = body
-    const openaiTTSKey = apiKey || process.env.OPENAI_TTS_KEY
+    const { message, voice, model, speed, apiKey, emotion } = body
+    const openaiTTSKey =
+      apiKey || process.env.OPENAI_TTS_KEY || process.env.OPENAI_KEY
 
     console.log('Parsed parameters:', {
       hasMessage: !!message,
@@ -46,13 +47,24 @@ export default async function handler(req: Request) {
     }
 
     const openai = new OpenAI({ apiKey: openaiTTSKey })
-
-    const mp3 = await openai.audio.speech.create({
+    const options: {
+      model: any
+      voice: any
+      speed: any
+      input: any
+      instructions?: any
+    } = {
       model: model,
       voice: voice,
-      input: message,
       speed: speed,
-    })
+      input: message,
+    }
+
+    if (model.includes('gpt-4o')) {
+      options.instructions = `Please speak "${message}" with rich emotional expression.`
+    }
+
+    const mp3 = await openai.audio.speech.create(options)
 
     const audioData = await mp3.arrayBuffer()
 

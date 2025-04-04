@@ -22,9 +22,9 @@ const toastStore = create<ToastState>((set, get) => ({
     const { tag } = toast
     const currentToasts = get().toasts
 
-    if (tag && currentToasts.some((t) => t.tag === tag)) {
-      return null
-    }
+    const filteredToasts = tag
+      ? currentToasts.filter((t) => t.tag !== tag)
+      : currentToasts
 
     const id = Math.random().toString(36).substring(2, 11)
     const message =
@@ -33,8 +33,8 @@ const toastStore = create<ToastState>((set, get) => ({
         : toast.message
     const duration = toast.type === 'error' ? 100000 : toast.duration
 
-    set((state) => ({
-      toasts: [...state.toasts, { ...toast, id, message, duration }],
+    set(() => ({
+      toasts: [...filteredToasts, { ...toast, id, message, duration }],
     }))
     return id
   },

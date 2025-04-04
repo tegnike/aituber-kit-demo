@@ -121,7 +121,7 @@ homeStore.subscribe((state, prevState) => {
       const processedMessage =
         messageSelectors.sanitizeMessageForStorage(lastMessage)
 
-      fetch('/api/save-chat-log', {
+      void fetch('/api/save-chat-log', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
