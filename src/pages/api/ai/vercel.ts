@@ -1,4 +1,7 @@
-import { Message } from '@/features/messages/messages'
+export const config = {
+  runtime: 'edge',
+}
+
 import { NextRequest } from 'next/server'
 import {
   VercelAIService,
@@ -11,10 +14,6 @@ import {
   streamAiText,
   generateAiText,
 } from '../services/vercelAi'
-
-export const config = {
-  runtime: 'edge',
-}
 
 export default async function handler(req: NextRequest) {
   if (req.method !== 'POST') {
@@ -143,7 +142,6 @@ export default async function handler(req: NextRequest) {
       useSearchGrounding &&
       modifiedMessages.every((msg) => typeof msg.content === 'string')
     const options = isUseSearchGrounding ? { useSearchGrounding: true } : {}
-    console.log('options', options)
 
     // ストリーミングレスポンスまたは一括レスポンスの生成
     if (stream) {

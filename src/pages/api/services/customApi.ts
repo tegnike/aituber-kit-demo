@@ -1,3 +1,7 @@
+export const config = {
+  runtime: 'edge',
+}
+
 import { Message } from '@/features/messages/messages'
 import { NextResponse } from 'next/server'
 
