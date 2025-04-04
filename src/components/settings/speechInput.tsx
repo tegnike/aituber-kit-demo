@@ -85,7 +85,7 @@ const SpeechInput = () => {
                   speechRecognitionMode === 'browser' ? 'whisper' : 'browser',
               })
             }
-            disabled={isSpeechModeSwitchDisabled}
+            disabled
           >
             {speechRecognitionMode === 'browser'
               ? t('BrowserSpeechRecognition')
