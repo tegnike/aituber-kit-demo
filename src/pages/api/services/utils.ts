@@ -12,12 +12,18 @@ export function modifyMessages(
   model: string,
   messages: Message[]
 ): Message[] {
-  // システムメッセージを SYSTEM_PROMPT に置き換える
+  // システムメッセージを SYSTEM_PROMPT に置き換え、システムプロンプト以外のメッセージを300文字に制限する
   const modifiedMessages = messages.map((message) => {
     if (message.role === 'system') {
       return { ...message, content: SYSTEM_PROMPT }
     }
-    return message
+    return {
+      ...message,
+      content:
+        typeof message.content === 'string'
+          ? message.content.substring(0, 300)
+          : message.content,
+    }
   })
 
   if (
