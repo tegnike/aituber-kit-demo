@@ -289,5 +289,20 @@
   "CustomAPIBodyInfo": "Proszę wpisać informacje o ciele w formacie JSON, które mają być dołączone do żądania API. messages będą automatycznie dołączone.",
   "CustomAPIDescription": "Uwaga: Wiadomości są automatycznie dołączane do ciała żądania. W trybie strumieniowym serwer musi zwrócić text/event-stream.",
   "ShowCharacterPresetMenu": "Wyświetl przycisk menu presetów postaci",
-  "SpeechRecognitionModeDisabledInfo": "Gdy tryb audio jest włączony, dostępne jest tylko rozpoznawanie mowy w przeglądarce.\nPonadto w trybie API w czasie rzeczywistym dostępne jest tylko rozpoznawanie mowy w przeglądarce, a funkcja limitu czasu rozpoznawania mowy jest wyłączona."
+  "SpeechRecognitionModeDisabledInfo": "Gdy tryb audio jest włączony, dostępne jest tylko rozpoznawanie mowy w przeglądarce.\nPonadto w trybie API w czasie rzeczywistym dostępne jest tylko rozpoznawanie mowy w przeglądarce, a funkcja limitu czasu rozpoznawania mowy jest wyłączona.",
+  "Auth": {
+    "SignIn": "Zaloguj się",
+    "SignUp": "Zarejestruj się",
+    "Email": "E-mail",
+    "Password": "Hasło",
+    "Processing": "Przetwarzanie...",
+    "Or": "lub",
+    "SignInWithGoogle": "Zaloguj się przez Google",
+    "UserName": "Nazwa użytkownika",
+    "EnterUserName": "Wprowadź nazwę użytkownika",
+    "UpdateUserName": "Aktualizuj nazwę użytkownika",
+    "Updating": "Aktualizowanie...",
+    "SignedIn": "Zalogowano",
+    "SignOut": "Wyloguj się"
+  }
 }
