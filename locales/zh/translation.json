@@ -292,5 +292,20 @@
   "CustomAPIBodyInfo": "请以JSON格式输入要包含在API请求中的主体信息。messages将自动包含。",
   "CustomAPIDescription": "注意：消息将自动包含在请求主体中。在流模式下，服务器需要返回text/event-stream。",
   "ShowCharacterPresetMenu": "显示角色预设菜单按钮",
-  "SpeechRecognitionModeDisabledInfo": "如果音频模式已启用，则仅可使用浏览器语音识别。\n此外，在实时API模式下，仅可使用浏览器语音识别，并且语音识别超时功能将被禁用。"
+  "SpeechRecognitionModeDisabledInfo": "如果音频模式已启用，则仅可使用浏览器语音识别。\n此外，在实时API模式下，仅可使用浏览器语音识别，并且语音识别超时功能将被禁用。",
+  "Auth": {
+    "SignIn": "登录",
+    "SignUp": "注册",
+    "Email": "邮箱",
+    "Password": "密码",
+    "Processing": "处理中...",
+    "Or": "或",
+    "SignInWithGoogle": "使用Google登录",
+    "UserName": "用户名",
+    "EnterUserName": "输入用户名",
+    "UpdateUserName": "更新用户名",
+    "Updating": "更新中...",
+    "SignedIn": "已登录",
+    "SignOut": "退出登录"
+  }
 }
