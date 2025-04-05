@@ -15,6 +15,7 @@ import Slide from './slide'
 import Log from './log'
 import Other from './other'
 import SpeechInput from './speechInput'
+import Auth from './auth'
 
 type Props = {
   onClickClose: () => void
@@ -55,6 +56,7 @@ type TabKey =
   | 'youtube'
   | 'slide'
   | 'log'
+  | 'auth'
   | 'other'
   | 'speechInput'
 
@@ -68,6 +70,7 @@ const tabIconMapping: Record<TabKey, string> = {
   youtube: '/images/setting-icons/youtube-settings.svg',
   slide: '/images/setting-icons/slide-settings.svg',
   log: '/images/setting-icons/conversation-history.svg',
+  auth: '/images/setting-icons/other-settings.svg', // Using other settings icon for auth
   other: '/images/setting-icons/other-settings.svg',
   speechInput: '/images/setting-icons/microphone-settings.svg',
 }
@@ -117,6 +120,10 @@ const Main = () => {
       label: t('LogSettings'),
     },
     {
+      key: 'auth',
+      label: t('認証設定'),
+    },
+    {
       key: 'other',
       label: t('OtherSettings'),
     },
@@ -140,6 +147,8 @@ const Main = () => {
         return <Slide />
       case 'log':
         return <Log />
+      case 'auth':
+        return <Auth />
       case 'other':
         return <Other />
       case 'speechInput':

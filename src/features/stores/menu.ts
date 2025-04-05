@@ -10,6 +10,7 @@ type SettingsTabKey =
   | 'youtube'
   | 'slide'
   | 'log'
+  | 'auth'
   | 'other'
 interface MenuState {
   showWebcam: boolean
