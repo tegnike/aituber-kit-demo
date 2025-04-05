@@ -288,5 +288,20 @@
   "CustomAPIBodyInfo": "Por favor, ingresa la información del cuerpo que se incluirá en la solicitud de API en formato JSON. messages se incluirán automáticamente.",
   "CustomAPIDescription": "Nota: Los mensajes se incluirán automáticamente en el cuerpo de la solicitud. En modo de streaming, el servidor debe devolver text/event-stream.",
   "ShowCharacterPresetMenu": "Mostrar botón de menú de preajustes de personaje",
-  "SpeechRecognitionModeDisabledInfo": "Si el modo de audio está habilitado, solo se puede usar el reconocimiento de voz del navegador.\nAdemás, en el modo de API en tiempo real, solo se puede usar el reconocimiento de voz del navegador y la función de tiempo de espera de reconocimiento de voz estará desactivada."
+  "SpeechRecognitionModeDisabledInfo": "Si el modo de audio está habilitado, solo se puede usar el reconocimiento de voz del navegador.\nAdemás, en el modo de API en tiempo real, solo se puede usar el reconocimiento de voz del navegador y la función de tiempo de espera de reconocimiento de voz estará desactivada.",
+  "Auth": {
+    "SignIn": "Iniciar sesión",
+    "SignUp": "Registrarse",
+    "Email": "Correo electrónico",
+    "Password": "Contraseña",
+    "Processing": "Procesando...",
+    "Or": "o",
+    "SignInWithGoogle": "Iniciar sesión con Google",
+    "UserName": "Nombre de usuario",
+    "EnterUserName": "Ingrese nombre de usuario",
+    "UpdateUserName": "Actualizar nombre de usuario",
+    "Updating": "Actualizando...",
+    "SignedIn": "Sesión iniciada",
+    "SignOut": "Cerrar sesión"
+  }
 }
