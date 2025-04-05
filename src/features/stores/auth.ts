@@ -37,14 +37,14 @@ export const useAuthStore = create<AuthState>()(
         try {
           set({ loading: true, error: null })
           if (!supabase) throw new Error('Supabase client not initialized')
-          
+
           const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
               redirectTo: `${window.location.origin}`,
             },
           })
-          
+
           if (error) throw error
         } catch (error: any) {
           set({ error: error.message })
@@ -58,12 +58,12 @@ export const useAuthStore = create<AuthState>()(
         try {
           set({ loading: true, error: null })
           if (!supabase) throw new Error('Supabase client not initialized')
-          
+
           const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password,
           })
-          
+
           if (error) throw error
           set({ user: data.user, session: data.session })
         } catch (error: any) {
@@ -78,7 +78,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           set({ loading: true, error: null })
           if (!supabase) throw new Error('Supabase client not initialized')
-          
+
           const { data, error } = await supabase.auth.signUp({
             email,
             password,
@@ -86,7 +86,7 @@ export const useAuthStore = create<AuthState>()(
               emailRedirectTo: `${window.location.origin}`,
             },
           })
-          
+
           if (error) throw error
           set({ user: data.user, session: data.session })
         } catch (error: any) {
@@ -101,10 +101,10 @@ export const useAuthStore = create<AuthState>()(
         try {
           set({ loading: true, error: null })
           if (!supabase) throw new Error('Supabase client not initialized')
-          
+
           const { error } = await supabase.auth.signOut()
           if (error) throw error
-          
+
           set({ user: null, session: null })
         } catch (error: any) {
           set({ error: error.message })
@@ -118,14 +118,14 @@ export const useAuthStore = create<AuthState>()(
         try {
           set({ loading: true, error: null })
           if (!supabase) throw new Error('Supabase client not initialized')
-          
+
           const { user } = get()
           if (!user) throw new Error('User not authenticated')
-          
+
           const { error } = await supabase
             .from('profiles')
             .upsert({ id: user.id, name, updated_at: new Date().toISOString() })
-          
+
           if (error) throw error
         } catch (error: any) {
           set({ error: error.message })
@@ -138,16 +138,16 @@ export const useAuthStore = create<AuthState>()(
       getUserName: async () => {
         try {
           if (!supabase) throw new Error('Supabase client not initialized')
-          
+
           const { user } = get()
           if (!user) return null
-          
+
           const { data, error } = await supabase
             .from('profiles')
             .select('name')
             .eq('id', user.id)
             .single()
-          
+
           if (error) throw error
           return data?.name || null
         } catch (error) {
@@ -158,7 +158,7 @@ export const useAuthStore = create<AuthState>()(
 
       clearError: () => {
         set({ error: null })
-      }
+      },
     }),
     {
       name: 'aituber-kit-auth',

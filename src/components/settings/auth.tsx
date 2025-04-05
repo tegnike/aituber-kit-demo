@@ -11,26 +11,26 @@ export const Auth = () => {
   const [userName, setUserName] = useState('')
   const [mode, setMode] = useState<'signin' | 'signup' | 'profile'>('signin')
   const [savedName, setSavedName] = useState<string | null>(null)
-  
-  const { 
-    user, 
-    loading, 
-    error, 
-    signInWithGoogle, 
-    signInWithEmail, 
-    signUpWithEmail, 
+
+  const {
+    user,
+    loading,
+    error,
+    signInWithGoogle,
+    signInWithEmail,
+    signUpWithEmail,
     signOut,
     updateUserName,
     getUserName,
-    clearError
+    clearError,
   } = useAuthStore()
 
   const { setUserName: setHomeUserName } = useHomeStore()
-  
+
   useEffect(() => {
     if (user) {
       setMode('profile')
-      getUserName().then(name => {
+      getUserName().then((name) => {
         setSavedName(name)
         if (name) {
           setUserName(name)
