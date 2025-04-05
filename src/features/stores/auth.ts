@@ -41,7 +41,8 @@ export const useAuthStore = create<AuthState>()(
           const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-              redirectTo: `${window.location.origin}`,
+              redirectTo: window.location.origin,
+              scopes: 'email profile',
             },
           })
 
@@ -135,7 +136,7 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      getUserName: async () => {
+      getUserName: async (): Promise<string | null> => {
         try {
           if (!supabase) throw new Error('Supabase client not initialized')
 
@@ -149,7 +150,7 @@ export const useAuthStore = create<AuthState>()(
             .single()
 
           if (error) throw error
-          return data?.name || null
+          return (data?.name as string) || null
         } catch (error) {
           console.error('Get user name error:', error)
           return null
