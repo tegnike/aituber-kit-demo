@@ -169,10 +169,24 @@ export const useAuthStore = create<AuthState>()(
 )
 
 if (typeof window !== 'undefined' && supabase) {
+  supabase.auth.getSession().then(({ data, error }) => {
+    if (!error) {
+      useAuthStore.setState({
+        user: data.session?.user || null,
+        session: data.session,
+        loading: false,
+      })
+    } else {
+      useAuthStore.setState({ loading: false })
+      console.error('Initial auth check error:', error)
+    }
+  })
+
   supabase.auth.onAuthStateChange((event, session) => {
     useAuthStore.setState({
       user: session?.user || null,
       session: session,
+      loading: false,
     })
   })
 }
