@@ -121,7 +121,7 @@ const Main = () => {
     },
     {
       key: 'auth',
-      label: t('認証設定'),
+      label: t('AuthSettings'),
     },
     {
       key: 'other',

@@ -7,6 +7,7 @@
   "VoiceSettings": "Paramètres de synthèse vocale",
   "SlideSettings": "Paramètres de diaporama",
   "LogSettings": "Historique des conversations",
+  "AuthSettings": "Authentication",
   "OtherSettings": "Autres",
   "ExternalLinkageMode": "Mode de liaison externe (version bêta)",
   "YoutubeMode": "Mode YouTube",

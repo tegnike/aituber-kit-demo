@@ -7,6 +7,7 @@
   "VoiceSettings": "การตั้งค่าเสียง合成",
   "SlideSettings": "การตั้งค่าการนำเสนอ",
   "LogSettings": "ประวัติการสนทนา",
+  "AuthSettings": "Authentication",
   "OtherSettings": "อื่น ๆ",
   "ExternalLinkageMode": "โหมดการเชื่อมต่อภายนอก (รุ่นเบต้า)",
   "YoutubeMode": "โหมด YouTube",

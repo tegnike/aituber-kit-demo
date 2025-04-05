@@ -7,6 +7,7 @@
   "VoiceSettings": "合成语音设置",
   "SlideSettings": "幻灯片设置",
   "LogSettings": "对话历史",
+  "AuthSettings": "Authentication",
   "OtherSettings": "其他",
   "ExternalLinkageMode": "外部链接模式（测试版）",
   "YoutubeMode": "YouTube 模式",

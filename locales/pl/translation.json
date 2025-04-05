@@ -7,6 +7,7 @@
   "VoiceSettings": "Ustawienia syntezatora mowy",
   "SlideSettings": "Ustawienia slajdów",
   "LogSettings": "Historia rozmów",
+  "AuthSettings": "Authentication",
   "OtherSettings": "Inne",
   "ExternalLinkageMode": "Tryb integracji zewnętrznej (wersja beta)",
   "YoutubeMode": "Tryb YouTube",

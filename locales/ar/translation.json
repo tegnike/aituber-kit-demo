@@ -7,6 +7,7 @@
   "VoiceSettings": "إعدادات الصوت الاصطناعي",
   "SlideSettings": "إعدادات الشريحة",
   "LogSettings": "سجل المحادثات",
+  "AuthSettings": "Authentication",
   "OtherSettings": "أخرى",
   "ExternalLinkageMode": "وضع الربط الخارجي (نسخة تجريبية)",
   "YoutubeMode": "وضع يوتيوب",

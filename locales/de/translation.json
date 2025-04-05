@@ -7,6 +7,7 @@
   "VoiceSettings": "Einstellungen für synthetische Sprache",
   "SlideSettings": "Slide-Einstellungen",
   "LogSettings": "Gesprächsverlauf",
+  "AuthSettings": "Authentication",
   "OtherSettings": "Sonstiges",
   "ExternalLinkageMode": "Externer Verknüpfungsmodus (Beta-Version)",
   "YoutubeMode": "YouTube-Modus",

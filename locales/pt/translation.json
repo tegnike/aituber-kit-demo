@@ -7,6 +7,7 @@
   "VoiceSettings": "Configurações de voz sintetizada",
   "SlideSettings": "Configurações de slide",
   "LogSettings": "Histórico de conversas",
+  "AuthSettings": "Authentication",
   "OtherSettings": "Outros",
   "ExternalLinkageMode": "Modo de integração externa (versão beta)",
   "YoutubeMode": "Modo YouTube",

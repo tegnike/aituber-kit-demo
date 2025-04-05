@@ -7,6 +7,7 @@
   "VoiceSettings": "합성 음성 설정",
   "SlideSettings": "슬라이드 설정",
   "LogSettings": "대화 기록",
+  "AuthSettings": "Authentication",
   "OtherSettings": "기타",
   "ExternalLinkageMode": "외부 연계 모드(베타 버전)",
   "YoutubeMode": "YouTube 모드",

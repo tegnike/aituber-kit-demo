@@ -8,7 +8,7 @@
   "SpeechInputSettings": "音声入力設定",
   "SlideSettings": "スライド設定",
   "LogSettings": "会話履歴",
-  "認証設定": "認証設定",
+  "AuthSettings": "認証設定",
   "OtherSettings": "その他",
   "ExternalLinkageMode": "外部連携モード（ベータ版）",
   "YoutubeMode": "YouTubeモード",
