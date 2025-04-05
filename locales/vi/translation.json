@@ -288,5 +288,20 @@
   "CustomAPIBodyInfo": "Vui lòng nhập thông tin nội dung sẽ được bao gồm trong yêu cầu API dưới định dạng JSON. messages sẽ được bao gồm tự động.",
   "CustomAPIDescription": "Lưu ý: Tin nhắn sẽ được bao gồm tự động trong nội dung yêu cầu. Trong chế độ streaming, máy chủ cần trả về text/event-stream.",
   "ShowCharacterPresetMenu": "Hiển thị nút menu cài đặt trước nhân vật",
-  "SpeechRecognitionModeDisabledInfo": "Nếu chế độ âm thanh được kích hoạt, chỉ có nhận diện giọng nói của trình duyệt là khả dụng.\nNgoài ra, trong chế độ API thời gian thực, chỉ có nhận diện giọng nói của trình duyệt là khả dụng và chức năng thời gian chờ nhận diện giọng nói sẽ bị vô hiệu hóa."
+  "SpeechRecognitionModeDisabledInfo": "Nếu chế độ âm thanh được kích hoạt, chỉ có nhận diện giọng nói của trình duyệt là khả dụng.\nNgoài ra, trong chế độ API thời gian thực, chỉ có nhận diện giọng nói của trình duyệt là khả dụng và chức năng thời gian chờ nhận diện giọng nói sẽ bị vô hiệu hóa.",
+  "Auth": {
+    "SignIn": "Đăng nhập",
+    "SignUp": "Đăng ký",
+    "Email": "Email",
+    "Password": "Mật khẩu",
+    "Processing": "Đang xử lý...",
+    "Or": "hoặc",
+    "SignInWithGoogle": "Đăng nhập bằng Google",
+    "UserName": "Tên người dùng",
+    "EnterUserName": "Nhập tên người dùng",
+    "UpdateUserName": "Cập nhật tên người dùng",
+    "Updating": "Đang cập nhật...",
+    "SignedIn": "Đã đăng nhập",
+    "SignOut": "Đăng xuất"
+  }
 }
