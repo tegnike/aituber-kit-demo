@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import useAuthStore from '@/features/stores/auth'
-import { useMenuStore } from '@/features/stores/menu'
-import { useHomeStore } from '@/features/stores/home'
 
 export const Auth = () => {
   const { t } = useTranslation()
@@ -25,8 +23,6 @@ export const Auth = () => {
     clearError,
   } = useAuthStore()
 
-  const { setUserName: setHomeUserName } = useHomeStore()
-
   useEffect(() => {
     if (user) {
       setMode('profile')
@@ -34,13 +30,12 @@ export const Auth = () => {
         setSavedName(name)
         if (name) {
           setUserName(name)
-          setHomeUserName(name)
         }
       })
     } else {
       setMode('signin')
     }
-  }, [user, getUserName, setHomeUserName])
+  }, [user, getUserName])
 
   useEffect(() => {
     return () => {
@@ -62,7 +57,6 @@ export const Auth = () => {
     e.preventDefault()
     await updateUserName(userName)
     setSavedName(userName)
-    setHomeUserName(userName)
   }
 
   if (!user) {
@@ -74,20 +68,20 @@ export const Auth = () => {
               className={`px-4 py-2 rounded ${mode === 'signin' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
               onClick={() => setMode('signin')}
             >
-              {t('サインイン')}
+              {t('Auth.SignIn')}
             </button>
             <button
               className={`px-4 py-2 rounded ${mode === 'signup' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
               onClick={() => setMode('signup')}
             >
-              {t('サインアップ')}
+              {t('Auth.SignUp')}
             </button>
           </div>
 
           {mode === 'signin' ? (
             <form onSubmit={handleSignIn} className="space-y-4">
               <div>
-                <label className="block mb-1">{t('メールアドレス')}</label>
+                <label className="block mb-1">{t('Auth.Email')}</label>
                 <input
                   type="email"
                   value={email}
@@ -97,7 +91,7 @@ export const Auth = () => {
                 />
               </div>
               <div>
-                <label className="block mb-1">{t('パスワード')}</label>
+                <label className="block mb-1">{t('Auth.Password')}</label>
                 <input
                   type="password"
                   value={password}
@@ -111,13 +105,13 @@ export const Auth = () => {
                 className="w-full py-2 bg-blue-500 text-white rounded"
                 disabled={loading}
               >
-                {loading ? t('処理中...') : t('サインイン')}
+                {loading ? t('Auth.Processing') : t('Auth.SignIn')}
               </button>
             </form>
           ) : (
             <form onSubmit={handleSignUp} className="space-y-4">
               <div>
-                <label className="block mb-1">{t('メールアドレス')}</label>
+                <label className="block mb-1">{t('Auth.Email')}</label>
                 <input
                   type="email"
                   value={email}
@@ -127,7 +121,7 @@ export const Auth = () => {
                 />
               </div>
               <div>
-                <label className="block mb-1">{t('パスワード')}</label>
+                <label className="block mb-1">{t('Auth.Password')}</label>
                 <input
                   type="password"
                   value={password}
@@ -141,7 +135,7 @@ export const Auth = () => {
                 className="w-full py-2 bg-blue-500 text-white rounded"
                 disabled={loading}
               >
-                {loading ? t('処理中...') : t('サインアップ')}
+                {loading ? t('Auth.Processing') : t('Auth.SignUp')}
               </button>
             </form>
           )}
@@ -159,7 +153,7 @@ export const Auth = () => {
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="px-2 bg-white text-gray-500">
-                  {t('または')}
+                  {t('Auth.Or')}
                 </span>
               </div>
             </div>
@@ -188,7 +182,7 @@ export const Auth = () => {
                 />
                 <path fill="none" d="M1 1h22v22H1z" />
               </svg>
-              <span>{t('Googleでサインイン')}</span>
+              <span>{t('Auth.SignInWithGoogle')}</span>
             </button>
           </div>
         </div>
@@ -200,19 +194,19 @@ export const Auth = () => {
     <div className="p-4">
       <div className="mb-4">
         <div className="bg-gray-100 p-4 rounded mb-4">
-          <p className="font-medium">{t('サインイン済み')}</p>
+          <p className="font-medium">{t('Auth.SignedIn')}</p>
           <p className="text-sm text-gray-600">{user.email}</p>
         </div>
 
         <form onSubmit={handleUpdateName} className="space-y-4 mb-6">
           <div>
-            <label className="block mb-1">{t('ユーザー名')}</label>
+            <label className="block mb-1">{t('Auth.UserName')}</label>
             <input
               type="text"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
               className="w-full p-2 border rounded"
-              placeholder={t('ユーザー名を入力')}
+              placeholder={t('Auth.EnterUserName')}
               required
             />
           </div>
@@ -221,7 +215,7 @@ export const Auth = () => {
             className="w-full py-2 bg-blue-500 text-white rounded"
             disabled={loading || userName === savedName}
           >
-            {loading ? t('更新中...') : t('ユーザー名を更新')}
+            {loading ? t('Auth.Updating') : t('Auth.UpdateUserName')}
           </button>
         </form>
 
@@ -230,7 +224,7 @@ export const Auth = () => {
           className="w-full py-2 border border-gray-300 rounded"
           disabled={loading}
         >
-          {loading ? t('処理中...') : t('サインアウト')}
+          {loading ? t('Auth.Processing') : t('Auth.SignOut')}
         </button>
       </div>
     </div>

@@ -293,5 +293,20 @@
   "CustomAPIHeadersInfo": "APIリクエストに含めるヘッダー情報をJSON形式で入力してください。",
   "CustomAPIBody": "カスタムボディ",
   "CustomAPIBodyInfo": "APIリクエストに含めるボディ情報をJSON形式で入力してください。messagesは自動的に含まれます。",
-  "CustomAPIDescription": "注意: メッセージは自動的にリクエストボディに含まれます。ストリーミングモードでは、サーバーがtext/event-streamを返す必要があります。"
+  "CustomAPIDescription": "注意: メッセージは自動的にリクエストボディに含まれます。ストリーミングモードでは、サーバーがtext/event-streamを返す必要があります。",
+  "Auth": {
+    "SignIn": "サインイン",
+    "SignUp": "サインアップ",
+    "Email": "メールアドレス",
+    "Password": "パスワード",
+    "Processing": "処理中...",
+    "Or": "または",
+    "SignInWithGoogle": "Googleでサインイン",
+    "UserName": "ユーザー名",
+    "EnterUserName": "ユーザー名を入力",
+    "UpdateUserName": "ユーザー名を更新",
+    "Updating": "更新中...",
+    "SignedIn": "サインイン済み",
+    "SignOut": "サインアウト"
+  }
 }

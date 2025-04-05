@@ -293,5 +293,20 @@
   "CustomAPIBodyInfo": "Please enter the body information to include in the API request in JSON format. Messages will be included automatically.",
   "CustomAPIDescription": "Note: Messages are automatically included in the request body. In streaming mode, the server must return text/event-stream.",
   "ShowCharacterPresetMenu": "Show Character Preset Menu Button",
-  "SpeechRecognitionModeDisabledInfo": "If audio mode is enabled, only browser speech recognition is available.\nAlso, in real-time API mode, only browser speech recognition is available, and the speech recognition timeout feature will be disabled."
+  "SpeechRecognitionModeDisabledInfo": "If audio mode is enabled, only browser speech recognition is available.\nAlso, in real-time API mode, only browser speech recognition is available, and the speech recognition timeout feature will be disabled.",
+  "Auth": {
+    "SignIn": "Sign In",
+    "SignUp": "Sign Up",
+    "Email": "Email",
+    "Password": "Password",
+    "Processing": "Processing...",
+    "Or": "or",
+    "SignInWithGoogle": "Sign in with Google",
+    "UserName": "Username",
+    "EnterUserName": "Enter username",
+    "UpdateUserName": "Update Username",
+    "Updating": "Updating...",
+    "SignedIn": "Signed In",
+    "SignOut": "Sign Out"
+  }
 }
