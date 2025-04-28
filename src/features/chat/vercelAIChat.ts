@@ -35,7 +35,6 @@ const getAIConfig = () => {
     customApiHeaders: ss.customApiHeaders,
     customApiBody: ss.customApiBody,
     customApiStream: ss.customApiStream,
-    includeSystemMessagesInCustomApi: ss.includeSystemMessagesInCustomApi,
   }
 }
 
@@ -82,17 +81,12 @@ export async function getVercelAIChatResponse(messages: Message[]) {
     // サービスタイプに応じてリクエストデータを追加
     if (selectAIService === 'custom-api') {
       // カスタムAPI用データ
-      const filteredMessages = getAIConfig().includeSystemMessagesInCustomApi
-        ? messages
-        : messages.filter((message) => message.role !== 'system')
-
       Object.assign(requestData, {
         customApiUrl,
         customApiHeaders,
         customApiBody,
         temperature,
         maxTokens,
-        messages: filteredMessages, // フィルタリングされたメッセージを使用
       })
     } else {
       // Vercel AI SDK用データ
@@ -128,9 +122,7 @@ export async function getVercelAIChatResponse(messages: Message[]) {
     return { text: data.text }
   } catch (error: any) {
     console.error(`Error fetching ${selectAIService} API response:`, error)
-    const errorCode = error.cause
-      ? error.cause.errorCode || 'AIAPIError'
-      : 'AIAPIError'
+    const errorCode = error.cause?.errorCode || 'AIAPIError'
     return { text: handleApiError(errorCode) }
   }
 }
@@ -164,17 +156,12 @@ export async function getVercelAIChatResponseStream(
   // サービスタイプに応じてリクエストデータを追加
   if (selectAIService === 'custom-api') {
     // カスタムAPI用データ
-    const filteredMessages = getAIConfig().includeSystemMessagesInCustomApi
-      ? messages
-      : messages.filter((message) => message.role !== 'system')
-
     Object.assign(requestData, {
       customApiUrl,
       customApiHeaders,
       customApiBody,
       temperature,
       maxTokens,
-      messages: filteredMessages, // フィルタリングされたメッセージを使用
     })
   } else {
     // Vercel AI SDK用データ
@@ -248,42 +235,8 @@ export async function getVercelAIChatResponseStream(
                 } catch (error) {
                   console.error('Error parsing JSON:', error)
                 }
-              } else if (line.startsWith('3:')) {
-                const content = line.substring(2).trim()
-                const decodedContent = JSON.parse(content)
-
-                console.error(
-                  `Error fetching ${selectAIService} API response:`,
-                  decodedContent
-                )
-                toastStore.getState().addToast({
-                  message: decodedContent,
-                  type: 'error',
-                  tag: 'vercel-api-error',
-                })
-              } else if (line.startsWith('9:')) {
-                // Anthropicのツール呼び出し情報を処理
-                const content = line.substring(2).trim()
-                try {
-                  const decodedContent = JSON.parse(content)
-                  if (decodedContent.toolName) {
-                    console.log(`Tool called: ${decodedContent.toolName}`)
-                    const message = i18next.t('Toasts.UsingTool', {
-                      toolName: decodedContent.toolName,
-                    })
-                    toastStore.getState().addToast({
-                      message,
-                      type: 'tool',
-                      tag: `vercel-tool-info-${decodedContent.toolName}`,
-                      duration: 3000,
-                    })
-                  }
-                } catch (error) {
-                  console.error('Error parsing tool call JSON:', error)
-                }
-              } else if (line.startsWith('e:') || line.startsWith('d:')) {
-                continue
-              } else if (line.match(/^([a-z]|\d):/)) {
+              } else if (line.match(/^[a-z]:/)) {
+                // "e:", "d:"などの形式のメタデータ行をスキップ
                 // これらは通常、ストリームの終了やメタデータを示すものであり、コンテンツではない
                 continue
               } else if (line.trim() !== '') {
@@ -319,9 +272,7 @@ export async function getVercelAIChatResponseStream(
       },
     })
   } catch (error: any) {
-    const errorMessage = handleApiError(
-      error.cause ? error.cause.errorCode : 'AIAPIError'
-    )
+    const errorMessage = handleApiError(error.cause.errorCode)
     toastStore.getState().addToast({
       message: errorMessage,
       type: 'error',

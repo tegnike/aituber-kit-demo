@@ -10,7 +10,6 @@ export class LipSync {
   private waitingForInteraction: boolean = false
   private pendingPlaybacks: Array<() => void> = []
   private forceStart: boolean = false
-  private currentSource: AudioBufferSourceNode | null = null
 
   public constructor(audio: AudioContext, options?: { forceStart?: boolean }) {
     this.audio = audio
@@ -206,8 +205,6 @@ export class LipSync {
       }
 
       const bufferSource = this.audio.createBufferSource()
-      // 再生中ソースを保持し、終了時にクリア
-      this.currentSource = bufferSource
       bufferSource.buffer = audioBuffer
 
       bufferSource.connect(this.audio.destination)
@@ -216,19 +213,11 @@ export class LipSync {
       if (onEnded) {
         bufferSource.addEventListener('ended', onEnded)
       }
-
-      // 再生終了後にクリア
-      bufferSource.onended = () => {
-        if (this.currentSource === bufferSource) this.currentSource = null
-        onEnded?.()
-      }
     } catch (error) {
       console.error('Failed to play audio:', error)
       if (onEnded) {
         onEnded()
       }
-      // ensure currentSource cleared on error
-      this.currentSource = null
     }
   }
 
@@ -275,17 +264,5 @@ export class LipSync {
       nonZeroCount > Math.min(1000, int16Array.length) * 0.1
 
     return isWithinRange && hasReasonableDistribution
-  }
-
-  /**
-   * 現在再生中の音声を停止
-   */
-  public stopCurrentPlayback() {
-    try {
-      this.currentSource?.stop()
-    } catch (e) {
-      console.warn('LipSync stopCurrentPlayback error:', e)
-    }
-    this.currentSource = null
   }
 }

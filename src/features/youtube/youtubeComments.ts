@@ -93,6 +93,12 @@ const retrieveLiveComments = async (
   return comments
 }
 
+const preProcessAIResponse = async (messages: Message[]) => {
+  const hs = homeStore.getState()
+  const chatLog = messageSelectors.getTextAndImageMessages(hs.chatLog)
+  await processAIResponse(chatLog, messages)
+}
+
 export const fetchAndProcessComments = async (
   handleSendChat: (text: string) => void
 ): Promise<void> => {
@@ -117,7 +123,7 @@ export const fetchAndProcessComments = async (
             ss.systemPrompt,
             chatLog
           )
-          processAIResponse(continuationMessage)
+          preProcessAIResponse(continuationMessage)
           settingsStore.setState({
             youtubeContinuationCount: ss.youtubeContinuationCount + 1,
           })
@@ -164,7 +170,7 @@ export const fetchAndProcessComments = async (
               ss.systemPrompt,
               chatLog
             )
-            processAIResponse(continuationMessage)
+            preProcessAIResponse(continuationMessage)
           } else if (noCommentCount === 3) {
             // 新しいトピックを生成
             const anotherTopic = await getAnotherTopic(chatLog)
@@ -174,14 +180,14 @@ export const fetchAndProcessComments = async (
               chatLog,
               anotherTopic
             )
-            processAIResponse(newTopicMessage)
+            preProcessAIResponse(newTopicMessage)
           } else if (noCommentCount === 6) {
             // スリープモードにする
             const messagesForSleep = await getMessagesForSleep(
               ss.systemPrompt,
               chatLog
             )
-            processAIResponse(messagesForSleep)
+            preProcessAIResponse(messagesForSleep)
             settingsStore.setState({ youtubeSleepMode: true })
           }
         }

@@ -15,6 +15,7 @@ export async function getOpenAIAudioChatResponseStream(
   messages: Message[]
 ): Promise<ReadableStream<string>> {
   const ss = settingsStore.getState()
+  const hs = homeStore.getState()
   const openai = new OpenAI({
     apiKey: ss.openaiKey,
     dangerouslyAllowBrowser: true,
@@ -36,6 +37,7 @@ export async function getOpenAIAudioChatResponseStream(
 
     return new ReadableStream({
       async start(controller) {
+        // handleReceiveText を handleReceiveTextFromRtFn() から取得
         const handleReceiveText = handleReceiveTextFromRtFn()
 
         const bufferManager = new AudioBufferManager(async (buffer) => {
@@ -52,16 +54,15 @@ export async function getOpenAIAudioChatResponseStream(
               bufferManager.addData(base64ToArrayBuffer(audio.data))
             }
             if (audio.id) {
-              homeStore.getState().upsertMessage({
-                id: audio.id, // これで同一メッセージを更新
+              hs.chatLog.push({
                 role: 'assistant',
                 audio: { id: audio.id },
-                content: '',
               })
             }
           }
         }
 
+        // ストリーム終了後に残っているバッファを送信
         await bufferManager.flush()
         controller.close()
       },

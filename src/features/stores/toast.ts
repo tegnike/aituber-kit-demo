@@ -3,7 +3,7 @@ import { create } from 'zustand'
 export interface Toast {
   id: string
   message: string
-  type: 'success' | 'error' | 'info' | 'tool'
+  type: 'success' | 'error' | 'info'
   duration?: number
   tag?: string
   closing?: boolean

@@ -233,9 +233,7 @@ DIFY_URL=""
 ```
 
 ::: warning 注意
-Difyでは、「チャットボット」または「エージェント」タイプのアプリケーションのみ対応しています。<br>
-また、Dify使用時は過去のメッセージの保持数やシステムプロンプトは、Dify側で設定する必要があります。<br>
-上手く回答が得られない場合は、会話履歴を削除してから改めて質問してください。
+Difyでは、「チャットボット」または「エージェント」タイプのアプリケーションのみ対応しています。また、Dify使用時は過去のメッセージの保持数やシステムプロンプトは、Dify側で設定する必要があります。
 :::
 
 ## カスタムAPI
@@ -249,8 +247,6 @@ NEXT_PUBLIC_CUSTOM_API_URL=""
 NEXT_PUBLIC_CUSTOM_API_HEADERS=""
 # カスタムAPIボディ
 NEXT_PUBLIC_CUSTOM_API_BODY=""
-# カスタムAPIでシステムメッセージを含めるかどうか（true/false）
-NEXT_PUBLIC_INCLUDE_SYSTEM_MESSAGES_IN_CUSTOM_API=true
 ```
 
 ::: warning 注意

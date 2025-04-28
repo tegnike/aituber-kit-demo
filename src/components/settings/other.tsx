@@ -1,9 +1,8 @@
-import { useTranslation } from 'react-i18next'
-import Image from 'next/image'
-
 import AdvancedSettings from './advancedSettings'
 import MessageReceiverSetting from './messageReceiver'
 import PresetQuestions from './presetQuestions'
+import Image from 'next/image'
+import { useTranslation } from 'react-i18next'
 
 const Other = () => {
   const { t } = useTranslation()
@@ -20,7 +19,6 @@ const Other = () => {
         />
         <h2 className="text-2xl font-bold">{t('OtherSettings')}</h2>
       </div>
-
       <AdvancedSettings />
       <PresetQuestions />
       <MessageReceiverSetting />
