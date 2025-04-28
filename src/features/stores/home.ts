@@ -48,9 +48,7 @@ let lastSavedLogLength = 0 // 最後に保存したログの長さを記録
 
 // ログ保存状態をリセットし、新しいセッションIDを生成する共通関数
 const resetSaveStateAndGenerateNewSession = () => {
-  console.log(
-    'Chat log was cleared, resetting save state and generating new session ID.'
-  )
+  console.log('Chat log was cleared, resetting save state and generating new session ID.')
   lastSavedLogLength = 0
   if (saveDebounceTimer) {
     clearTimeout(saveDebounceTimer)
@@ -168,7 +166,9 @@ const homeStore = create<HomeState>()(
           // lastSavedLogLength を復元 (upstream/main側のロジック)
           lastSavedLogLength = state.chatLog.length
           console.log(
-            `Rehydrated state: sessionId='${state.sessionId}', chatLog length='${lastSavedLogLength}'`
+            'Rehydrated state: sessionId='%s', chatLog length='%d'',
+            state.sessionId,
+            lastSavedLogLength
           )
         }
       },
