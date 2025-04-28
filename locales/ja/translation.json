@@ -295,6 +295,9 @@
   "CustomAPIBodyInfo": "APIリクエストに含めるボディ情報をJSON形式で入力してください。messagesは自動的に含まれます。",
   "CustomAPIDescription": "注意: メッセージは自動的にリクエストボディに含まれます。ストリーミングモードでは、サーバーがtext/event-streamを返す必要があります。",
   "Auth": {
+    "Title": "認証設定",
+    "UserAccount": "ユーザーアカウント",
+    "UserProfile": "ユーザープロフィール",
     "SignIn": "サインイン",
     "SignUp": "サインアップ",
     "Email": "メールアドレス",

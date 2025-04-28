@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import useAuthStore from '@/features/stores/auth'
+import Image from 'next/image'
+import { TextButton } from '../textButton'
 
 export const Auth = () => {
   const { t } = useTranslation()
@@ -61,17 +63,38 @@ export const Auth = () => {
 
   if (!user) {
     return (
-      <div className="p-4">
-        <div className="mb-4">
+      <>
+        <div className="mb-6">
+          <div className="flex items-center mb-6">
+            <Image
+              src="/images/setting-icons/auth-settings.svg"
+              alt="Auth Settings"
+              width={24}
+              height={24}
+              className="mr-2"
+            />
+            <h2 className="text-2xl font-bold">{t('Auth.Title')}</h2>
+          </div>
+
+          <div className="mb-4 text-xl font-bold">{t('Auth.UserAccount')}</div>
+
           <div className="flex space-x-4 mb-4">
             <button
-              className={`px-4 py-2 rounded ${mode === 'signin' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+              className={`px-4 py-2 rounded-lg ${
+                mode === 'signin'
+                  ? 'bg-primary text-white'
+                  : 'bg-gray-200 hover:bg-gray-300'
+              }`}
               onClick={() => setMode('signin')}
             >
               {t('Auth.SignIn')}
             </button>
             <button
-              className={`px-4 py-2 rounded ${mode === 'signup' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+              className={`px-4 py-2 rounded-lg ${
+                mode === 'signup'
+                  ? 'bg-primary text-white'
+                  : 'bg-gray-200 hover:bg-gray-300'
+              }`}
               onClick={() => setMode('signup')}
             >
               {t('Auth.SignUp')}
@@ -81,67 +104,71 @@ export const Auth = () => {
           {mode === 'signin' ? (
             <form onSubmit={handleSignIn} className="space-y-4">
               <div>
-                <label className="block mb-1">{t('Auth.Email')}</label>
+                <label className="block mb-1 text-base font-bold">
+                  {t('Auth.Email')}
+                </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded-lg"
                   required
                 />
               </div>
               <div>
-                <label className="block mb-1">{t('Auth.Password')}</label>
+                <label className="block mb-1 text-base font-bold">
+                  {t('Auth.Password')}
+                </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded-lg"
                   required
                 />
               </div>
-              <button
-                type="submit"
-                className="w-full py-2 bg-blue-500 text-white rounded"
-                disabled={loading}
-              >
-                {loading ? t('Auth.Processing') : t('Auth.SignIn')}
-              </button>
+              <div className="my-2">
+                <TextButton type="submit" disabled={loading}>
+                  {loading ? t('Auth.Processing') : t('Auth.SignIn')}
+                </TextButton>
+              </div>
             </form>
           ) : (
             <form onSubmit={handleSignUp} className="space-y-4">
               <div>
-                <label className="block mb-1">{t('Auth.Email')}</label>
+                <label className="block mb-1 text-base font-bold">
+                  {t('Auth.Email')}
+                </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded-lg"
                   required
                 />
               </div>
               <div>
-                <label className="block mb-1">{t('Auth.Password')}</label>
+                <label className="block mb-1 text-base font-bold">
+                  {t('Auth.Password')}
+                </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded-lg"
                   required
                 />
               </div>
-              <button
-                type="submit"
-                className="w-full py-2 bg-blue-500 text-white rounded"
-                disabled={loading}
-              >
-                {loading ? t('Auth.Processing') : t('Auth.SignUp')}
-              </button>
+              <div className="my-2">
+                <TextButton type="submit" disabled={loading}>
+                  {loading ? t('Auth.Processing') : t('Auth.SignUp')}
+                </TextButton>
+              </div>
             </form>
           )}
 
           {error && (
-            <div className="mt-4 p-2 bg-red-100 text-red-700 rounded">
+            <div className="mt-4 p-2 bg-red-100 text-red-700 rounded-lg">
               {error}
             </div>
           )}
@@ -160,7 +187,7 @@ export const Auth = () => {
 
             <button
               onClick={signInWithGoogle}
-              className="mt-4 w-full py-2 border border-gray-300 rounded flex items-center justify-center space-x-2"
+              className="mt-4 w-full py-2 border border-gray-300 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-100"
               disabled={loading}
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -186,48 +213,63 @@ export const Auth = () => {
             </button>
           </div>
         </div>
-      </div>
+      </>
     )
   }
 
   return (
-    <div className="p-4">
-      <div className="mb-4">
-        <div className="bg-gray-100 p-4 rounded mb-4">
+    <>
+      <div className="mb-6">
+        <div className="flex items-center mb-6">
+          <Image
+            src="/images/setting-icons/auth-settings.svg"
+            alt="Auth Settings"
+            width={24}
+            height={24}
+            className="mr-2"
+          />
+          <h2 className="text-2xl font-bold">{t('Auth.Title')}</h2>
+        </div>
+
+        <div className="mb-4 text-xl font-bold">{t('Auth.UserProfile')}</div>
+
+        <div className="bg-gray-100 p-4 rounded-lg mb-4">
           <p className="font-medium">{t('Auth.SignedIn')}</p>
           <p className="text-sm text-gray-600">{user.email}</p>
         </div>
 
-        <form onSubmit={handleUpdateName} className="space-y-4 mb-6">
-          <div>
-            <label className="block mb-1">{t('Auth.UserName')}</label>
+        <div className="my-6">
+          <div className="my-4 text-base font-bold">{t('Auth.UserName')}</div>
+          <form onSubmit={handleUpdateName} className="space-y-4 mb-6">
             <input
               type="text"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded-lg"
               placeholder={t('Auth.EnterUserName')}
               required
             />
-          </div>
-          <button
-            type="submit"
-            className="w-full py-2 bg-blue-500 text-white rounded"
-            disabled={loading || userName === savedName}
-          >
-            {loading ? t('Auth.Updating') : t('Auth.UpdateUserName')}
-          </button>
-        </form>
+            <div className="my-2">
+              <TextButton
+                type="submit"
+                disabled={loading || userName === savedName}
+              >
+                {loading ? t('Auth.Updating') : t('Auth.UpdateUserName')}
+              </TextButton>
+            </div>
+          </form>
+        </div>
 
-        <button
-          onClick={signOut}
-          className="w-full py-2 border border-gray-300 rounded"
-          disabled={loading}
-        >
-          {loading ? t('Auth.Processing') : t('Auth.SignOut')}
-        </button>
+        <div className="my-6">
+          <div className="my-4 text-base font-bold">{t('Auth.SignOut')}</div>
+          <div className="my-2">
+            <TextButton onClick={signOut} disabled={loading}>
+              {loading ? t('Auth.Processing') : t('Auth.SignOut')}
+            </TextButton>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
