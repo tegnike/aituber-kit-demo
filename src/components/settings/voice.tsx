@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 
 import {
@@ -13,8 +13,7 @@ import {
   OpenAITTSVoice,
   OpenAITTSModel,
 } from '@/features/constants/settings'
-import { testVoiceVox } from '@/features/messages/speakCharacter'
-import { testAivisSpeech } from '@/features/messages/speakCharacter'
+import { getOpenAITTSModels } from '@/features/constants/aiModels'
 import { testVoice } from '@/features/messages/speakCharacter'
 import settingsStore from '@/features/stores/settings'
 import { Link } from '../link'
@@ -76,7 +75,7 @@ const Voice = () => {
   const [customVoiceText, setCustomVoiceText] = useState<string>('')
 
   // にじボイスの話者一覧を取得する関数
-  const fetchNijivoiceSpeakers = async () => {
+  const fetchNijivoiceSpeakers = useCallback(async () => {
     try {
       const response = await fetch(
         `/api/get-nijivoice-actors?apiKey=${nijivoiceApiKey}`
@@ -91,7 +90,7 @@ const Voice = () => {
     } catch (error) {
       console.error('Failed to fetch nijivoice speakers:', error)
     }
-  }
+  }, [nijivoiceApiKey])
 
   // AIVISの話者一覧を取得する関数
   const fetchAivisSpeakers = async () => {
@@ -109,7 +108,7 @@ const Voice = () => {
     if (selectVoice === 'nijivoice') {
       fetchNijivoiceSpeakers()
     }
-  }, [selectVoice, nijivoiceApiKey])
+  }, [selectVoice, nijivoiceApiKey, fetchNijivoiceSpeakers])
 
   // コンポーネントマウント時またはAIVIS選択時に話者一覧を取得
   useEffect(() => {
@@ -858,9 +857,11 @@ const Voice = () => {
                     }
                     className="px-4 py-2 bg-white hover:bg-white-hover rounded-lg"
                   >
-                    <option value="tts-1">tts-1</option>
-                    <option value="tts-1-hd">tts-1-hd</option>
-                    <option value="gpt-4o-mini-tts">gpt-4o-mini-tts</option>
+                    {getOpenAITTSModels().map((model) => (
+                      <option key={model} value={model}>
+                        {model}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="mt-4 font-bold">

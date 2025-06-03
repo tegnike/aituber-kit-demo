@@ -4,6 +4,9 @@ export const config = {
 
 import OpenAI from 'openai'
 
+// 感情表現を豊かにする追加指示を行うモデル、念の為リスト形式
+const gpt4oEmotionalInstructionModels = ['gpt-4o']
+
 export default async function handler(req: Request) {
   if (req.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
@@ -60,7 +63,7 @@ export default async function handler(req: Request) {
       input: message,
     }
 
-    if (model.includes('gpt-4o')) {
+    if (gpt4oEmotionalInstructionModels.some((m) => model.includes(m))) {
       options.instructions = `Please speak "${message}" with rich emotional expression.`
     }
 

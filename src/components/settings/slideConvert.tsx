@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import settingsStore, {
-  multiModalAIServiceKey,
-  multiModalAIServices,
-} from '@/features/stores/settings'
+import settingsStore from '@/features/stores/settings'
+import {
+  getDefaultModel,
+  getMultiModalModels,
+  isMultiModalModel,
+} from '@/features/constants/aiModels'
 import { TextButton } from '../textButton'
 
 interface SlideConvertProps {
@@ -14,29 +16,17 @@ const SlideConvert: React.FC<SlideConvertProps> = ({ onFolderUpdate }) => {
   const { t } = useTranslation()
   const [file, setFile] = useState<File | null>(null)
   const [folderName, setFolderName] = useState<string>('')
-  const aiService = settingsStore.getState()
-    .selectAIService as multiModalAIServiceKey
+  const aiService = settingsStore((s) => s.selectAIService)
+  const selectLanguage = settingsStore((s) => s.selectLanguage)
 
   const [model, setModel] = useState<string>('')
 
   useEffect(() => {
-    switch (aiService) {
-      case 'openai':
-        setModel('gpt-4o')
-        break
-      case 'anthropic':
-        setModel('claude-3-5-sonnet-20241022')
-        break
-      case 'google':
-        setModel('gemini-1.5-flash-latest')
-        break
-      default:
-        setModel('')
-    }
+    const defaultModel = getDefaultModel(aiService)
+    setModel(defaultModel)
   }, [aiService])
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const selectLanguage = settingsStore.getState().selectLanguage
   const [selectedFileName, setSelectedFileName] = useState<string>('')
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,13 +40,28 @@ const SlideConvert: React.FC<SlideConvertProps> = ({ onFolderUpdate }) => {
   const handleFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
 
-    if (!multiModalAIServices.includes(aiService)) {
+    const currentModel = settingsStore.getState().selectAIModel
+    if (!isMultiModalModel(aiService, currentModel)) {
       alert(t('InvalidAIService'))
       return
     }
 
-    const apiKeyName = `${aiService}Key` as const
-    const apiKey = settingsStore.getState()[apiKeyName]
+    let apiKey = ''
+    const settings = settingsStore.getState()
+
+    if (aiService === 'openai') apiKey = settings.openaiKey
+    else if (aiService === 'anthropic') apiKey = settings.anthropicKey
+    else if (aiService === 'google') apiKey = settings.googleKey
+    else if (aiService === 'azure') apiKey = settings.azureKey
+    else if (aiService === 'xai') apiKey = settings.xaiKey
+    else if (aiService === 'groq') apiKey = settings.groqKey
+    else if (aiService === 'cohere') apiKey = settings.cohereKey
+    else if (aiService === 'mistralai') apiKey = settings.mistralaiKey
+    else if (aiService === 'perplexity') apiKey = settings.perplexityKey
+    else if (aiService === 'fireworks') apiKey = settings.fireworksKey
+    else if (aiService === 'deepseek') apiKey = settings.deepseekKey
+    else if (aiService === 'openrouter') apiKey = settings.openrouterKey
+    else if (aiService === 'dify') apiKey = settings.difyKey
 
     if (!file || !folderName || !apiKey || !model) {
       alert(t('PdfConvertSubmitError'))
@@ -134,55 +139,12 @@ const SlideConvert: React.FC<SlideConvertProps> = ({ onFolderUpdate }) => {
           onChange={(e) => setModel(e.target.value)}
           className="text-ellipsis px-4 py-2 w-col-span-4 bg-white hover:bg-white-hover rounded-lg"
         >
-          {aiService === 'openai' && (
-            <>
-              <option value="chatgpt-4o-latest">chatgpt-4o-latest</option>
-              <option value="gpt-4o-mini-2024-07-18">
-                gpt-4o-mini-2024-07-18
+          {aiService &&
+            getMultiModalModels(aiService).map((model) => (
+              <option key={model} value={model}>
+                {model}
               </option>
-              <option value="gpt-4o-2024-11-20">gpt-4o-2024-11-20</option>
-              <option value="gpt-4.5-preview-2025-02-27">
-                gpt-4.5-preview-2025-02-27
-              </option>
-              <option value="gpt-4.1-nano-2025-04-14">
-                gpt-4.1-nano-2025-04-14
-              </option>
-              <option value="gpt-4.1-mini-2025-04-14">
-                gpt-4.1-mini-2025-04-14
-              </option>
-              <option value="gpt-4.1-2025-04-14">gpt-4.1-2025-04-14</option>
-            </>
-          )}
-          {aiService === 'anthropic' && (
-            <>
-              <option value="claude-3-opus-20240229">
-                claude-3-opus-20240229
-              </option>
-              <option value="claude-3-7-sonnet-20250219">
-                claude-3-7-sonnet-20250219
-              </option>
-              <option value="claude-3-5-sonnet-20241022">
-                claude-3.5-sonnet-20241022
-              </option>
-              <option value="claude-3-5-haiku-20241022">
-                claude-3.5-haiku-20241022
-              </option>
-            </>
-          )}
-          {aiService === 'google' && (
-            <>
-              <option value="gemini-2.0-flash-001">gemini-2.0-flash-001</option>
-              <option value="gemini-1.5-flash-latest">
-                gemini-1.5-flash-latest
-              </option>
-              <option value="gemini-1.5-flash-8b-latest">
-                gemini-1.5-flash-8b-latest
-              </option>
-              <option value="gemini-1.5-pro-latest">
-                gemini-1.5-pro-latest
-              </option>
-            </>
-          )}
+            ))}
         </select>
         <div className="mt-4">
           <TextButton type="submit" disabled={isLoading}>

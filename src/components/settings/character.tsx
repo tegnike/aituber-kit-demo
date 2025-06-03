@@ -337,8 +337,17 @@ type Character = Pick<
 
 const Character = () => {
   const { t } = useTranslation()
-  const { characterName, selectedVrmPath, selectedLive2DPath, modelType } =
-    settingsStore()
+  const {
+    characterName,
+    selectedVrmPath,
+    selectedLive2DPath,
+    modelType,
+    fixedCharacterPosition,
+  } = settingsStore()
+  const [vrmFiles, setVrmFiles] = useState<string[]>([])
+  const [live2dModels, setLive2dModels] = useState<
+    Array<{ path: string; name: string }>
+  >([])
   const selectAIService = settingsStore((s) => s.selectAIService)
   const systemPrompt = settingsStore((s) => s.systemPrompt)
   const characterPresets = [
@@ -526,6 +535,31 @@ const Character = () => {
             </div> */}
           </>
         )}
+
+        {/* Character Position Controls */}
+        <div className="my-6">
+          <div className="text-xl font-bold mb-4">{t('CharacterPosition')}</div>
+          <div className="mb-4 text-base">{t('CharacterPositionInfo')}</div>
+          <div className="mb-2 text-sm font-medium">
+            {t('CurrentStatus')}:{' '}
+            <span className="font-bold">
+              {fixedCharacterPosition
+                ? t('PositionFixed')
+                : t('PositionNotFixed')}
+            </span>
+          </div>
+          <div className="flex gap-4">
+            <TextButton onClick={() => handlePositionAction('fix')}>
+              {t('FixPosition')}
+            </TextButton>
+            <TextButton onClick={() => handlePositionAction('unfix')}>
+              {t('UnfixPosition')}
+            </TextButton>
+            <TextButton onClick={() => handlePositionAction('reset')}>
+              {t('ResetPosition')}
+            </TextButton>
+          </div>
+        </div>
 
         <div className="my-6 mb-2">
           <div className="my-4 text-xl font-bold">
