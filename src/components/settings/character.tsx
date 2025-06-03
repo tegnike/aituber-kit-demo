@@ -403,6 +403,57 @@ const Character = () => {
     setTooltip((prev) => ({ ...prev, visible: false }))
   }
 
+  const handlePositionAction = (action: 'fix' | 'unfix' | 'reset') => {
+    try {
+      const { viewer, live2dViewer } = homeStore.getState()
+
+      if (modelType === 'vrm') {
+        const methodMap = {
+          fix: 'fixCameraPosition',
+          unfix: 'unfixCameraPosition',
+          reset: 'resetCameraPosition',
+        }
+        const method = methodMap[action]
+        if (viewer && typeof (viewer as any)[method] === 'function') {
+          ;(viewer as any)[method]()
+        } else {
+          throw new Error(`VRM viewer method ${method} not available`)
+        }
+      } else if (live2dViewer) {
+        const methodMap = {
+          fix: 'fixPosition',
+          unfix: 'unfixPosition',
+          reset: 'resetPosition',
+        }
+        const method = methodMap[action]
+        if (typeof (live2dViewer as any)[method] === 'function') {
+          ;(live2dViewer as any)[method]()
+        } else {
+          throw new Error(`Live2D viewer method ${method} not available`)
+        }
+      }
+
+      const messageMap = {
+        fix: t('Toasts.PositionFixed'),
+        unfix: t('Toasts.PositionUnfixed'),
+        reset: t('Toasts.PositionReset'),
+      }
+
+      toastStore.getState().addToast({
+        message: messageMap[action],
+        type: action === 'fix' ? 'success' : 'info',
+        tag: `position-${action}`,
+      })
+    } catch (error) {
+      console.error(`Position ${action} failed:`, error)
+      toastStore.getState().addToast({
+        message: t('Toasts.PositionActionFailed'),
+        type: 'error',
+        tag: 'position-error',
+      })
+    }
+  }
+
   const handleVrmUpload = async (file: File) => {
     const formData = new FormData()
     formData.append('file', file)
