@@ -27,6 +27,10 @@ export default async function handler(req: NextRequest) {
     customApiBody = process.env.CUSTOM_API_BODY || '{}',
   } = await req.json()
 
+  console.error('customApiUrl', customApiUrl)
+  console.error('customApiHeaders', customApiHeaders)
+  console.error('customApiBody', customApiBody)
+
   try {
     return await handleCustomApi(
       messages,
