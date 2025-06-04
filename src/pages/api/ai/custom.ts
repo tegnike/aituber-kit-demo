@@ -19,17 +19,17 @@ export default async function handler(req: NextRequest) {
     )
   }
 
-  const {
+  let {
     messages,
     stream,
-    customApiUrl = process.env.CUSTOM_API_URL || '',
-    customApiHeaders = process.env.CUSTOM_API_HEADERS || '{}',
-    customApiBody = process.env.CUSTOM_API_BODY || '{}',
+    customApiUrl = '',
+    customApiHeaders = '{}',
+    customApiBody = '{}',
   } = await req.json()
 
-  console.error('customApiUrl', customApiUrl)
-  console.error('customApiHeaders', customApiHeaders)
-  console.error('customApiBody', customApiBody)
+  customApiUrl = process.env.CUSTOM_API_URL || customApiUrl
+  customApiHeaders = process.env.CUSTOM_API_HEADERS || customApiHeaders
+  customApiBody = process.env.CUSTOM_API_BODY || customApiBody
 
   try {
     return await handleCustomApi(
