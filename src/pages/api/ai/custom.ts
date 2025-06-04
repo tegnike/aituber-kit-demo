@@ -1,57 +1,52 @@
+import { NextRequest } from 'next/server'
+import { handleCustomApi } from '../services/customApi'
+
 export const config = {
   runtime: 'edge',
 }
 
-// import { Message } from '@/features/messages/messages'
-// import { NextRequest } from 'next/server'
-// import { handleCustomApi } from '../services/customApi'
+export default async function handler(req: NextRequest) {
+  if (req.method !== 'POST') {
+    return new Response(
+      JSON.stringify({
+        error: 'Method Not Allowed',
+        errorCode: 'METHOD_NOT_ALLOWED',
+      }),
+      {
+        status: 405,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    )
+  }
 
-// export const config = {
-//   runtime: 'edge',
-// }
+  const {
+    messages,
+    stream,
+    customApiUrl = process.env.CUSTOM_API_URL || '',
+    customApiHeaders = process.env.CUSTOM_API_HEADERS || '{}',
+    customApiBody = process.env.CUSTOM_API_BODY || '{}',
+  } = await req.json()
 
-// export default async function handler(req: NextRequest) {
-//   if (req.method !== 'POST') {
-//     return new Response(
-//       JSON.stringify({
-//         error: 'Method Not Allowed',
-//         errorCode: 'METHOD_NOT_ALLOWED',
-//       }),
-//       {
-//         status: 405,
-//         headers: { 'Content-Type': 'application/json' },
-//       }
-//     )
-//   }
+  try {
+    return await handleCustomApi(
+      messages,
+      customApiUrl,
+      customApiHeaders === '' ? '{}' : customApiHeaders,
+      customApiBody === '' ? '{}' : customApiBody,
+      stream
+    )
+  } catch (error) {
+    console.error('Error in Custom API call:', error)
 
-//   const {
-//     messages,
-//     stream,
-//     customApiUrl = '',
-//     customApiHeaders = '{}',
-//     customApiBody = '{}',
-//   } = await req.json()
-
-//   try {
-//     return await handleCustomApi(
-//       messages,
-//       customApiUrl,
-//       customApiHeaders === '' ? '{}' : customApiHeaders,
-//       customApiBody === '' ? '{}' : customApiBody,
-//       stream
-//     )
-//   } catch (error) {
-//     console.error('Error in Custom API call:', error)
-
-//     return new Response(
-//       JSON.stringify({
-//         error: 'Unexpected Error',
-//         errorCode: 'CustomAPIError',
-//       }),
-//       {
-//         status: 500,
-//         headers: { 'Content-Type': 'application/json' },
-//       }
-//     )
-//   }
-// }
+    return new Response(
+      JSON.stringify({
+        error: 'Unexpected Error',
+        errorCode: 'CustomAPIError',
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    )
+  }
+}
