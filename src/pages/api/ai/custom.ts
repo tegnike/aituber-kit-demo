@@ -28,8 +28,8 @@ export default async function handler(req: NextRequest) {
   } = await req.json()
 
   customApiUrl = process.env.CUSTOM_API_URL || customApiUrl
-  customApiHeaders = process.env.CUSTOM_API_HEADERS || customApiHeaders
-  customApiBody = process.env.CUSTOM_API_BODY || customApiBody
+  customApiHeaders = customApiHeaders
+  customApiBody = customApiBody
 
   try {
     return await handleCustomApi(

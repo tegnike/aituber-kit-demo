@@ -6,9 +6,11 @@ import {
   AIService,
 } from '@/features/constants/settings'
 import settingsStore from '../stores/settings'
+import homeStore from '../stores/home'
 
 const getAIConfig = () => {
   const ss = settingsStore.getState()
+  const hs = homeStore.getState()
   // AIServiceとして扱う（より広い型）
   const aiService = ss.selectAIService as AIService
 
@@ -19,6 +21,11 @@ const getAIConfig = () => {
     aiService !== 'custom-api'
       ? (ss[`${aiService}Key` as keyof typeof ss] as string)
       : ''
+
+  const customApiBody = JSON.stringify({
+    threadId: hs.sessionId,
+    resourceId: 'nikechan',
+  })
 
   return {
     aiApiKey: apiKey,
@@ -31,7 +38,7 @@ const getAIConfig = () => {
     maxTokens: ss.maxTokens,
     customApiUrl: ss.customApiUrl,
     customApiHeaders: ss.customApiHeaders,
-    customApiBody: ss.customApiBody,
+    customApiBody: customApiBody,
     customApiStream: ss.customApiStream,
     includeSystemMessagesInCustomApi: ss.includeSystemMessagesInCustomApi,
   }
