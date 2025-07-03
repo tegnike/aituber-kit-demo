@@ -36,7 +36,7 @@ export const messageSelectors = {
     messages: Message[],
     includeTimestamp: boolean
   ): Message[] => {
-    const maxPastMessages = settingsStore.getState().maxPastMessages
+    const maxPastMessages = 1
     return messages
       .map((message, index) => {
         // 最後のメッセージだけそのまま利用する（= 最後のメッセージだけマルチモーダルの対象となる）

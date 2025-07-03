@@ -40,7 +40,7 @@ const getAIConfig = () => {
     customApiHeaders: ss.customApiHeaders,
     customApiBody: customApiBody,
     customApiStream: ss.customApiStream,
-    includeSystemMessagesInCustomApi: ss.includeSystemMessagesInCustomApi,
+    includeSystemMessagesInCustomApi: false,
   }
 }
 
