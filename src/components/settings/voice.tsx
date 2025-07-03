@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 
 import {
@@ -13,8 +13,8 @@ import {
   OpenAITTSVoice,
   OpenAITTSModel,
 } from '@/features/constants/settings'
-import { testVoiceVox } from '@/features/messages/speakCharacter'
-import { testAivisSpeech } from '@/features/messages/speakCharacter'
+import { getOpenAITTSModels } from '@/features/constants/aiModels'
+import { testVoice } from '@/features/messages/speakCharacter'
 import settingsStore from '@/features/stores/settings'
 import { Link } from '../link'
 import { TextButton } from '../textButton'
@@ -72,9 +72,10 @@ const Voice = () => {
   const [nijivoiceSpeakers, setNijivoiceSpeakers] = useState<Array<any>>([])
   const [prevNijivoiceActorId, setPrevNijivoiceActorId] = useState<string>('')
   const [speakers_aivis, setSpeakers_aivis] = useState<Array<any>>([])
+  const [customVoiceText, setCustomVoiceText] = useState<string>('')
 
   // にじボイスの話者一覧を取得する関数
-  const fetchNijivoiceSpeakers = async () => {
+  const fetchNijivoiceSpeakers = useCallback(async () => {
     try {
       const response = await fetch(
         `/api/get-nijivoice-actors?apiKey=${nijivoiceApiKey}`
@@ -89,7 +90,7 @@ const Voice = () => {
     } catch (error) {
       console.error('Failed to fetch nijivoice speakers:', error)
     }
-  }
+  }, [nijivoiceApiKey])
 
   // AIVISの話者一覧を取得する関数
   const fetchAivisSpeakers = async () => {
@@ -107,7 +108,7 @@ const Voice = () => {
     if (selectVoice === 'nijivoice') {
       fetchNijivoiceSpeakers()
     }
-  }, [selectVoice, nijivoiceApiKey])
+  }, [selectVoice, nijivoiceApiKey, fetchNijivoiceSpeakers])
 
   // コンポーネントマウント時またはAIVIS選択時に話者一覧を取得
   useEffect(() => {
@@ -186,6 +187,7 @@ const Voice = () => {
           <option value="nijivoice">{t('UsingNijiVoice')}</option>
         </select>
       </div>
+
       <div className="mt-10">
         <div className="mb-4 text-xl font-bold">{t('VoiceAdjustment')}</div>
         {(() => {
@@ -213,6 +215,7 @@ const Voice = () => {
                     disabled
                   />
                 </div>
+
                 <div className="mt-4 font-bold">プリセット</div>
                 <div className="my-2 grid grid-cols-2 gap-[8px]">
                   <TextButton
@@ -351,9 +354,6 @@ const Voice = () => {
                       </option>
                     ))}
                   </select>
-                  <TextButton onClick={() => testVoiceVox()} className="ml-4">
-                    {t('TestVoice')}
-                  </TextButton>
                 </div>
                 <div className="mt-6 font-bold">
                   <div className="select-none">
@@ -608,13 +608,6 @@ const Voice = () => {
                     ))}
                   </select>
                   <TextButton
-                    onClick={() => testAivisSpeech()}
-                    className="ml-4"
-                    disabled
-                  >
-                    {t('TestVoice')}
-                  </TextButton>
-                  <TextButton
                     onClick={async () => {
                       const response = await fetch(
                         '/api/update-aivis-speakers?serverUrl=' +
@@ -864,9 +857,11 @@ const Voice = () => {
                     }
                     className="px-4 py-2 bg-white hover:bg-white-hover rounded-lg"
                   >
-                    <option value="tts-1">tts-1</option>
-                    <option value="tts-1-hd">tts-1-hd</option>
-                    <option value="gpt-4o-mini-tts">gpt-4o-mini-tts</option>
+                    {getOpenAITTSModels().map((model) => (
+                      <option key={model} value={model}>
+                        {model}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="mt-4 font-bold">
@@ -1055,6 +1050,28 @@ const Voice = () => {
             )
           }
         })()}
+      </div>
+
+      {/* カスタムテキスト入力と統合テストボタン */}
+      <div className="mt-10 p-4 bg-gray-50 rounded-lg">
+        <div className="mb-4 text-xl font-bold">{t('TestVoiceSettings')}</div>
+        <div className="flex items-center">
+          <input
+            className="flex-1 px-4 py-2 bg-white hover:bg-white-hover rounded-lg"
+            type="text"
+            placeholder={t('CustomVoiceTextPlaceholder')}
+            value={customVoiceText}
+            onChange={(e) => setCustomVoiceText(e.target.value)}
+          />
+        </div>
+        <div className="flex items-center mt-4">
+          <TextButton
+            onClick={() => testVoice(selectVoice, customVoiceText)}
+            disabled={!customVoiceText}
+          >
+            {t('TestSelectedVoice')}
+          </TextButton>
+        </div>
       </div>
     </div>
   )

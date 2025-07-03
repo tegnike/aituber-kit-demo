@@ -1,5 +1,5 @@
 import { Application, Ticker, DisplayObject } from 'pixi.js'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch/cubism4'
 import homeStore from '@/features/stores/home'
 import settingsStore from '@/features/stores/settings'
@@ -12,13 +12,28 @@ const setModelPosition = (
   app: Application,
   model: InstanceType<typeof Live2DModel>
 ) => {
-  const scale = 0.3
-  model.scale.set(scale)
-  model.x = app.renderer.width / 2
-  model.y = app.renderer.height / 2
+  const settings = settingsStore.getState()
+
+  // If position is fixed and saved, restore it
+  if (
+    settings.fixedCharacterPosition &&
+    (settings.characterPosition.x !== 0 ||
+      settings.characterPosition.y !== 0 ||
+      settings.characterPosition.scale !== 1)
+  ) {
+    model.scale.set(settings.characterPosition.scale)
+    model.x = settings.characterPosition.x
+    model.y = settings.characterPosition.y
+  } else {
+    // Default positioning
+    const scale = 0.3
+    model.scale.set(scale)
+    model.x = app.renderer.width / 2
+    model.y = app.renderer.height / 2
+  }
 }
 
-const Live2DComponent = () => {
+const Live2DComponent = (): JSX.Element => {
   console.log('Live2DComponent rendering')
 
   const canvasContainerRef = useRef<HTMLCanvasElement>(null)
@@ -34,6 +49,58 @@ const Live2DComponent = () => {
   // ピンチジェスチャー用の状態
   const [pinchDistance, setPinchDistance] = useState<number | null>(null)
   const [initialScale, setInitialScale] = useState<number | null>(null)
+
+  // モデルの現在位置を設定に保存する関数
+  const saveModelPosition = useCallback(() => {
+    if (!model) return
+
+    const settings = settingsStore.getState()
+    settingsStore.setState({
+      characterPosition: {
+        x: model.x,
+        y: model.y,
+        z: settings.characterPosition.z, // 既存のzを保持（VRM viewerで使用 → viewer.ts:216–221）
+        scale: model.scale.x,
+      },
+      characterRotation: settings.characterRotation, // 既存のrotationを保持（VRM viewerで使用 → viewer.ts:224–226）
+    })
+  }, [model])
+
+  // Position management functions that can be called from settings
+  const fixPosition = useCallback(() => {
+    if (!model) return
+    saveModelPosition()
+    settingsStore.setState({ fixedCharacterPosition: true })
+  }, [model, saveModelPosition])
+
+  const unfixPosition = useCallback(() => {
+    settingsStore.setState({ fixedCharacterPosition: false })
+  }, [])
+
+  const resetPosition = useCallback(() => {
+    if (!model || !app) return
+    settingsStore.setState({
+      fixedCharacterPosition: false,
+      characterPosition: { x: 0, y: 0, z: 0, scale: 1 },
+      characterRotation: { x: 0, y: 0, z: 0 },
+    })
+    setModelPosition(app, model)
+  }, [model, app])
+
+  // Store position management functions in homeStore for access from settings
+  useEffect(() => {
+    if (model) {
+      // Merge position management functions with the Live2D model instance
+      const viewerWithPositionControls = Object.assign(model, {
+        fixPosition,
+        unfixPosition,
+        resetPosition,
+      })
+      homeStore.setState({
+        live2dViewer: viewerWithPositionControls,
+      })
+    }
+  }, [model, app, fixPosition, unfixPosition, resetPosition])
 
   useEffect(() => {
     initApp()
@@ -104,7 +171,7 @@ const Live2DComponent = () => {
 
       modelRef.current = newModel
       setModel(newModel)
-      hs.live2dViewer = newModel
+      // Don't set live2dViewer here, it will be set in the useEffect with position controls
 
       await Live2DHandler.resetToIdle()
     } catch (error) {
@@ -125,11 +192,16 @@ const Live2DComponent = () => {
     const canvas = canvasContainerRef.current
 
     const handlePointerDown = (event: PointerEvent) => {
-      setIsDragging(true)
-      setDragOffset({
-        x: event.clientX - model.x,
-        y: event.clientY - model.y,
-      })
+      const { fixedCharacterPosition } = settingsStore.getState()
+
+      // Don't allow dragging if position is fixed
+      if (!fixedCharacterPosition) {
+        setIsDragging(true)
+        setDragOffset({
+          x: event.clientX - model.x,
+          y: event.clientY - model.y,
+        })
+      }
 
       if (event.button !== 2) {
         model.tap(event.clientX, event.clientY)
@@ -145,9 +217,18 @@ const Live2DComponent = () => {
 
     const handlePointerUp = () => {
       setIsDragging(false)
+      // Save position when dragging ends (if not fixed)
+      if (!settingsStore.getState().fixedCharacterPosition) {
+        saveModelPosition()
+      }
     }
 
     const handleWheel = (event: WheelEvent) => {
+      const { fixedCharacterPosition } = settingsStore.getState()
+
+      // Don't allow scaling if position is fixed
+      if (fixedCharacterPosition) return
+
       event.preventDefault()
       // スケール変更を緩やかにするため、係数を小さくする
       const scaleChange = event.deltaY * -0.0002
@@ -156,11 +237,45 @@ const Live2DComponent = () => {
       // スケールの範囲は0.1から2.0に制限
       if (newScale >= 0.1 && newScale <= 2.0) {
         model.scale.set(newScale)
+        // Save position when scaling (if not fixed)
+        saveModelPosition()
+      }
+    }
+
+    const handleDragOver = (event: DragEvent) => {
+      event.preventDefault()
+    }
+
+    const handleDrop = (event: DragEvent) => {
+      event.preventDefault()
+
+      const files = event.dataTransfer?.files
+      if (!files) {
+        return
+      }
+
+      const file = files[0]
+      if (!file) {
+        return
+      }
+
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = function () {
+          const image = reader.result as string
+          image !== '' && homeStore.setState({ modalImage: image })
+        }
       }
     }
 
     // タッチイベント処理
     const handleTouchStart = (event: TouchEvent) => {
+      const { fixedCharacterPosition } = settingsStore.getState()
+
+      // Don't allow pinch if position is fixed
+      if (fixedCharacterPosition) return
+
       if (event.touches.length === 2) {
         // ピンチ開始
         const dist = getDistance(event.touches[0], event.touches[1])
@@ -189,6 +304,10 @@ const Live2DComponent = () => {
       // ピンチ終了
       setPinchDistance(null)
       setInitialScale(null)
+      // Save position when pinch gesture ends (if not fixed)
+      if (!settingsStore.getState().fixedCharacterPosition) {
+        saveModelPosition()
+      }
     }
 
     // イベントリスナーの登録
@@ -196,6 +315,8 @@ const Live2DComponent = () => {
     canvas.addEventListener('pointermove', handlePointerMove)
     canvas.addEventListener('pointerup', handlePointerUp)
     canvas.addEventListener('wheel', handleWheel, { passive: false })
+    canvas.addEventListener('dragover', handleDragOver)
+    canvas.addEventListener('drop', handleDrop)
 
     // タッチイベントリスナーの登録
     canvas.addEventListener('touchstart', handleTouchStart)
@@ -208,6 +329,8 @@ const Live2DComponent = () => {
       canvas.removeEventListener('pointermove', handlePointerMove)
       canvas.removeEventListener('pointerup', handlePointerUp)
       canvas.removeEventListener('wheel', handleWheel)
+      canvas.removeEventListener('dragover', handleDragOver)
+      canvas.removeEventListener('drop', handleDrop)
 
       // タッチイベントリスナーの削除
       canvas.removeEventListener('touchstart', handleTouchStart)

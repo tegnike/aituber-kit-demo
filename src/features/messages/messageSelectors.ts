@@ -36,7 +36,7 @@ export const messageSelectors = {
     messages: Message[],
     includeTimestamp: boolean
   ): Message[] => {
-    const maxPastMessages = settingsStore.getState().maxPastMessages
+    const maxPastMessages = 1
     return messages
       .map((message, index) => {
         // 最後のメッセージだけそのまま利用する（= 最後のメッセージだけマルチモーダルの対象となる）
@@ -84,11 +84,34 @@ export const messageSelectors = {
         }
 
         const lastItem = acc[acc.length - 1]
-        if (lastItem && lastItem.role === item.role) {
-          if (typeof item.content != 'string' && item.content) {
-            lastItem.content += ' ' + item.content[0].text
-          } else {
-            lastItem.content += ' ' + item.content
+        if (
+          lastItem &&
+          lastItem.role === item.role &&
+          lastItem.id !== undefined &&
+          item.id !== undefined &&
+          lastItem.id === item.id
+        ) {
+          if (typeof item.content !== 'string' && item.content?.[0]?.text) {
+            const currentText =
+              typeof lastItem.content === 'string'
+                ? lastItem.content
+                : lastItem.content?.[0]?.text || ''
+            if (Array.isArray(lastItem.content)) {
+              lastItem.content[0].text =
+                currentText + ' ' + item.content[0].text
+            } else {
+              lastItem.content = currentText + ' ' + item.content[0].text
+            }
+          } else if (typeof item.content === 'string') {
+            const currentText =
+              typeof lastItem.content === 'string'
+                ? lastItem.content
+                : lastItem.content?.[0]?.text || ''
+            if (Array.isArray(lastItem.content)) {
+              lastItem.content[0].text = currentText + ' ' + item.content
+            } else {
+              lastItem.content = currentText + ' ' + item.content
+            }
           }
         } else {
           const text = item.content
