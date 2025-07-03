@@ -3,5 +3,14 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "peacock.color": "#FC617F",
+  "workbench.colorCustomizations": {
+    "tab.activeBorder": "#fd93a8",
+    "statusBar.background": "#fc617f",
+    "statusBar.foreground": "#15202b",
+    "statusBarItem.hoverBackground": "#fb2f56",
+    "statusBarItem.remoteBackground": "#fc617f",
+    "statusBarItem.remoteForeground": "#15202b"
+  }
 }
